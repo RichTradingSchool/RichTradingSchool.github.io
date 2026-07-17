@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#07090c">
 
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 
 <style>
@@ -19,8 +19,10 @@
     --bg: #07090c;
     --card: rgba(255, 255, 255, 0.045);
     --card-border: rgba(255, 255, 255, 0.09);
+    --gold: #d9b344;
+    --gold-hi: #f0d468;
+    --gold-dim: rgba(217, 179, 68, 0.14);
     --green: #00e07f;
-    --green-dim: rgba(0, 224, 127, 0.14);
     --red: #ff5b5b;
     --text: #eef2f0;
     --text-dim: #8a949e;
@@ -35,11 +37,11 @@
     min-height: 100dvh;
   }
 
-  /* ─── 배경: 캔들 차트 캔버스 + 글로우 ─── */
+  /* ─── 배경: 캔들 차트 캔버스 + 골드 글로우 + 크레스트 라인아트 ─── */
   #chart-bg {
     position: fixed; inset: 0;
     width: 100%; height: 100%;
-    opacity: 0.5;
+    opacity: 0.38;
     z-index: 0;
   }
   .glow {
@@ -47,10 +49,24 @@
     width: 130vw; height: 55vh;
     left: 50%; top: -18vh;
     transform: translateX(-50%);
-    background: radial-gradient(ellipse at center, rgba(0, 224, 127, 0.13) 0%, transparent 65%);
+    background: radial-gradient(ellipse at center, rgba(217, 179, 68, 0.12) 0%, transparent 65%);
     pointer-events: none;
     z-index: 1;
   }
+  /* 크레스트 워터마크 — 코드로 그려서 선이 스스로 그어지는 애니메이션 */
+  #crest-bg {
+    position: fixed;
+    left: 50%; top: 47%;
+    transform: translate(-50%, -50%);
+    width: min(135vw, 110vh);
+    aspect-ratio: 1;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.13;
+    animation: crestBreath 7s ease-in-out infinite;
+  }
+  @keyframes crestBreath { 0%, 100% { opacity: 0.13; } 50% { opacity: 0.22; } }
+  #crest-bg path, #crest-bg text { transition: stroke-dashoffset 2.4s ease; }
 
   .wrap {
     position: relative; z-index: 2;
@@ -63,22 +79,23 @@
 
   /* ─── 프로필 ─── */
   .avatar {
-    width: 92px; height: 92px;
+    width: 104px; height: 104px;
     border-radius: 50%;
-    background: linear-gradient(145deg, #10161d, #0a0e13);
-    border: 2px solid rgba(0, 224, 127, 0.55);
-    box-shadow: 0 0 34px rgba(0, 224, 127, 0.22), inset 0 0 18px rgba(0, 224, 127, 0.06);
+    background: radial-gradient(circle at 35% 30%, #141a22, #090c10 70%);
+    border: 2px solid rgba(217, 179, 68, 0.6);
+    box-shadow: 0 0 38px rgba(217, 179, 68, 0.22), inset 0 0 20px rgba(217, 179, 68, 0.06);
     display: grid; place-items: center;
     animation: float 5s ease-in-out infinite;
+    overflow: hidden;
   }
-  .avatar svg { width: 46px; height: 46px; }
+  .avatar svg { width: 82%; height: 82%; display: block; }
   @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 
   h1 {
     margin-top: 20px;
     font-size: 24px; font-weight: 800; letter-spacing: -0.02em;
   }
-  h1 .en { color: var(--green); }
+  h1 .en { color: var(--gold); }
   .tagline {
     margin-top: 8px;
     color: var(--text-dim);
@@ -130,18 +147,18 @@
   }
   .btn:active { transform: scale(0.975); }
   @media (hover: hover) {
-    .btn:hover { border-color: rgba(0, 224, 127, 0.45); background: rgba(0, 224, 127, 0.05); }
+    .btn:hover { border-color: rgba(217, 179, 68, 0.5); background: rgba(217, 179, 68, 0.05); }
   }
   .btn.primary {
-    background: linear-gradient(120deg, rgba(0, 224, 127, 0.16), rgba(0, 224, 127, 0.05));
-    border-color: rgba(0, 224, 127, 0.5);
-    box-shadow: 0 4px 26px rgba(0, 224, 127, 0.12);
+    background: linear-gradient(120deg, rgba(217, 179, 68, 0.17), rgba(217, 179, 68, 0.05));
+    border-color: rgba(217, 179, 68, 0.55);
+    box-shadow: 0 4px 26px rgba(217, 179, 68, 0.13);
   }
   /* 프라이머리 버튼 슬라이딩 샤인 */
   .btn.primary::after {
     content: '';
     position: absolute; top: 0; bottom: 0; width: 55%;
-    background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.07), transparent);
+    background: linear-gradient(105deg, transparent, rgba(255, 235, 170, 0.09), transparent);
     animation: shine 3.2s ease-in-out infinite;
   }
   @keyframes shine { 0% { left: -60%; } 55%, 100% { left: 120%; } }
@@ -154,7 +171,7 @@
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.07);
   }
-  .btn.primary .ico { background: var(--green-dim); border-color: rgba(0, 224, 127, 0.3); }
+  .btn.primary .ico { background: var(--gold-dim); border-color: rgba(217, 179, 68, 0.35); }
   .btn .ico svg { width: 22px; height: 22px; }
 
   .btn .txt { flex: 1; min-width: 0; }
@@ -162,13 +179,13 @@
   .btn .txt span { display: block; margin-top: 3px; font-size: 12.5px; color: var(--text-dim); font-weight: 500; }
   .btn .arrow { flex: none; color: var(--text-dim); transition: transform 0.2s ease, color 0.2s ease; }
   @media (hover: hover) {
-    .btn:hover .arrow { transform: translateX(3px); color: var(--green); }
+    .btn:hover .arrow { transform: translateX(3px); color: var(--gold); }
   }
   .badge {
     flex: none;
     font-size: 10.5px; font-weight: 800; letter-spacing: 0.04em;
-    color: #06130c;
-    background: var(--green);
+    color: #1a1405;
+    background: linear-gradient(135deg, var(--gold-hi), var(--gold));
     padding: 4px 8px; border-radius: 999px;
   }
 
@@ -182,7 +199,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .avatar, .ticker .dot, .btn.primary::after { animation: none; }
+    .avatar, .ticker .dot, .btn.primary::after, #crest-bg { animation: none; }
   }
 </style>
 </head>
@@ -190,16 +207,11 @@
 
 <canvas id="chart-bg"></canvas>
 <div class="glow"></div>
+<div id="crest-bg" aria-hidden="true"></div>
 
 <div class="wrap">
 
-  <div class="avatar" aria-hidden="true">
-    <!-- 상승 차트 모노그램 -->
-    <svg viewBox="0 0 48 48" fill="none">
-      <path d="M6 34 L16 24 L23 29 L42 10" stroke="#00e07f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M31 10 H42 V21" stroke="#00e07f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
+  <div class="avatar" id="avatar" aria-hidden="true"></div>
 
   <h1>리치트레이딩 <span class="en">RICH</span></h1>
   <p class="tagline">BTC 실전매매 · 트레이딩 챌린지 · 실시간 시그널</p>
@@ -219,7 +231,7 @@
     <!-- 1. 트레이딩 챌린지 신청 (카카오톡 채널 1:1 채팅) -->
     <a class="btn primary" href="https://pf.kakao.com/_ICyin/chat" target="_blank" rel="noopener">
       <span class="ico">
-        <svg viewBox="0 0 24 24" fill="#00e07f"><path d="M12 3C6.48 3 2 6.54 2 10.9c0 2.8 1.86 5.26 4.66 6.66-.15.52-.96 3.32-.99 3.54 0 0-.02.17.09.23.11.07.24.02.24.02.32-.05 3.66-2.4 4.24-2.81.57.08 1.16.13 1.76.13 5.52 0 10-3.54 10-7.9S17.52 3 12 3z"/></svg>
+        <svg viewBox="0 0 24 24" fill="#d9b344"><path d="M12 3C6.48 3 2 6.54 2 10.9c0 2.8 1.86 5.26 4.66 6.66-.15.52-.96 3.32-.99 3.54 0 0-.02.17.09.23.11.07.24.02.24.02.32-.05 3.66-2.4 4.24-2.81.57.08 1.16.13 1.76.13 5.52 0 10-3.54 10-7.9S17.52 3 12 3z"/></svg>
       </span>
       <span class="txt">
         <b>트레이딩 챌린지 신청</b>
@@ -261,6 +273,89 @@
 </div>
 
 <script>
+/* ═══════════════════════════════════════════════════════
+   크레스트 로고 — 코드로 그리는 벡터 (방패+왕관+T+월계수)
+   월계수 잎은 베지어 곡선 위에 수식으로 배치
+   ═══════════════════════════════════════════════════════ */
+function crestSVG(mode, idp) {
+  // 왼쪽 월계수 가지의 줄기 곡선 (오른쪽은 그룹 미러링)
+  const A = { x: 94, y: 187 }, B = { x: 12, y: 168 }, C = { x: 24, y: 78 };
+  const qp = t => ({
+    x: (1 - t) ** 2 * A.x + 2 * (1 - t) * t * B.x + t * t * C.x,
+    y: (1 - t) ** 2 * A.y + 2 * (1 - t) * t * B.y + t * t * C.y
+  });
+  const qt = t => Math.atan2(
+    2 * (1 - t) * (B.y - A.y) + 2 * t * (C.y - B.y),
+    2 * (1 - t) * (B.x - A.x) + 2 * t * (C.x - B.x)
+  ) * 180 / Math.PI;
+
+  let leaves = '';
+  for (let i = 0; i < 8; i++) {
+    const t = 0.13 + i * 0.115;
+    const p = qp(t), th = qt(t);
+    const s = 1.02 - Math.abs(t - 0.5) * 0.45;   // 가운데 잎이 가장 큼
+    // 잎 축은 로컬 -y 방향 → 줄기 진행방향(th) ± 40°로 벌림
+    leaves += `<path class="lf" d="M0 0 Q5.5 -7.5 0 -21 Q-5.5 -7.5 0 0"
+      transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${(th + 90 - 40).toFixed(1)}) scale(${s.toFixed(2)})"/>`;
+    leaves += `<path class="lf" d="M0 0 Q5.5 -7.5 0 -21 Q-5.5 -7.5 0 0"
+      transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${(th + 90 + 40).toFixed(1)}) scale(${(s * 0.9).toFixed(2)})"/>`;
+  }
+  const stem = `M${A.x} ${A.y} Q${B.x} ${B.y} ${C.x} ${C.y}`;
+  const branch = `<path class="st" d="${stem}" fill="none"/>${leaves}`;
+
+  const crown = 'M70 45 L70 20 L85 34 L100 11 L115 34 L130 20 L130 45 Q100 52 70 45 Z';
+  const shield = 'M63 53 L137 53 L137 108 Q137 134 100 148 Q63 134 63 108 Z';
+
+  const fillMode = mode === 'fill';
+  const defs = fillMode ? `<defs>
+      <linearGradient id="${idp}g1" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#f0d468"/><stop offset=".55" stop-color="#c9a227"/><stop offset="1" stop-color="#8a6a1a"/>
+      </linearGradient>
+      <linearGradient id="${idp}g2" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#e2be4e"/><stop offset="1" stop-color="#775912"/>
+      </linearGradient>
+      <linearGradient id="${idp}gs" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#e9eaee"/><stop offset="1" stop-color="#aeb2ba"/>
+      </linearGradient>
+    </defs>` : '';
+
+  const style = fillMode
+    ? `<style>.lf{fill:url(#${idp}g1)}.st{stroke:#c9a227;stroke-width:3;stroke-linecap:round}</style>`
+    : `<style>.lf,.st,.cr,.sh{fill:none;stroke:#d9b344;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.tt{fill:none;stroke:#d9b344;stroke-width:1.2}</style>`;
+
+  const crownEl = `<path class="cr" d="${crown}" ${fillMode ? `fill="url(#${idp}g1)"` : ''}/>`;
+  const shieldEl = `<path class="sh" d="${shield}" ${fillMode ? `fill="url(#${idp}g2)"` : ''}/>`;
+  const tEl = `<text class="tt" x="100" y="127" text-anchor="middle"
+      font-family="Georgia,'Times New Roman',serif" font-size="76" font-weight="bold"
+      ${fillMode ? `fill="url(#${idp}gs)"` : ''}>T</text>`;
+
+  return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    ${defs}${style}
+    <g>${branch}</g>
+    <g transform="translate(200 0) scale(-1 1)">${branch}</g>
+    ${crownEl}${shieldEl}${tEl}
+  </svg>`;
+}
+
+/* 아바타: 채움 버전 */
+document.getElementById('avatar').innerHTML = crestSVG('fill', 'av');
+
+/* 배경 워터마크: 라인아트 버전 + 선이 그어지는 애니메이션 */
+(function crestBg() {
+  const host = document.getElementById('crest-bg');
+  host.innerHTML = crestSVG('line', 'bg');
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const paths = host.querySelectorAll('path');
+  paths.forEach((p, i) => {
+    const L = p.getTotalLength();
+    p.style.strokeDasharray = L;
+    p.style.strokeDashoffset = L;
+    p.style.transitionDelay = (i * 0.04) + 's';
+  });
+  host.getBoundingClientRect();            // 강제 리플로우로 초기 상태 확정 (백그라운드 탭에서도 동작)
+  setTimeout(() => { paths.forEach(p => { p.style.strokeDashoffset = '0'; }); }, 60);
+})();
+
 /* ─── 라이브 BTC 시세 (바이낸스 공개 API, 실패 시 숨김) ─── */
 (async function ticker() {
   const el = document.getElementById('ticker');
