@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>리치트레이딩 | 링크</title>
+
+<!-- ─── 링크 미리보기(카톡·인스타 DM 공유 시) ─── -->
+<meta property="og:title" content="리치트레이딩 RICH TRADING">
+<meta property="og:description" content="BTC 실전매매 · 트레이딩 챌린지 · 실시간 시그널">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#07090c">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+
+<style>
+  :root {
+    --bg: #07090c;
+    --card: rgba(255, 255, 255, 0.045);
+    --card-border: rgba(255, 255, 255, 0.09);
+    --green: #00e07f;
+    --green-dim: rgba(0, 224, 127, 0.14);
+    --red: #ff5b5b;
+    --text: #eef2f0;
+    --text-dim: #8a949e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    overflow-x: hidden;
+    min-height: 100dvh;
+  }
+
+  /* ─── 배경: 캔들 차트 캔버스 + 글로우 ─── */
+  #chart-bg {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    opacity: 0.5;
+    z-index: 0;
+  }
+  .glow {
+    position: fixed;
+    width: 130vw; height: 55vh;
+    left: 50%; top: -18vh;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(0, 224, 127, 0.13) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .wrap {
+    position: relative; z-index: 2;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: clamp(40px, 10vh, 76px) 22px 36px;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100dvh;
+  }
+
+  /* ─── 프로필 ─── */
+  .avatar {
+    width: 92px; height: 92px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #10161d, #0a0e13);
+    border: 2px solid rgba(0, 224, 127, 0.55);
+    box-shadow: 0 0 34px rgba(0, 224, 127, 0.22), inset 0 0 18px rgba(0, 224, 127, 0.06);
+    display: grid; place-items: center;
+    animation: float 5s ease-in-out infinite;
+  }
+  .avatar svg { width: 46px; height: 46px; }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+
+  h1 {
+    margin-top: 20px;
+    font-size: 24px; font-weight: 800; letter-spacing: -0.02em;
+  }
+  h1 .en { color: var(--green); }
+  .tagline {
+    margin-top: 8px;
+    color: var(--text-dim);
+    font-size: 14.5px; font-weight: 500;
+    letter-spacing: 0.01em;
+    text-align: center;
+  }
+
+  /* ─── 라이브 BTC 시세 ─── */
+  .ticker {
+    margin-top: 16px;
+    display: none;
+    align-items: center; gap: 8px;
+    padding: 7px 15px;
+    border-radius: 999px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    font-size: 13.5px; font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    backdrop-filter: blur(8px);
+  }
+  .ticker.on { display: inline-flex; }
+  .ticker .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+  .ticker .chg.up { color: var(--green); }
+  .ticker .chg.down { color: var(--red); }
+
+  /* ─── 링크 버튼 ─── */
+  .links {
+    margin-top: 34px;
+    width: 100%;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .btn {
+    position: relative;
+    display: flex; align-items: center; gap: 15px;
+    padding: 17px 19px;
+    border-radius: 17px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    text-decoration: none; color: var(--text);
+    backdrop-filter: blur(10px);
+    transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    overflow: hidden;
+  }
+  .btn:active { transform: scale(0.975); }
+  @media (hover: hover) {
+    .btn:hover { border-color: rgba(0, 224, 127, 0.45); background: rgba(0, 224, 127, 0.05); }
+  }
+  .btn.primary {
+    background: linear-gradient(120deg, rgba(0, 224, 127, 0.16), rgba(0, 224, 127, 0.05));
+    border-color: rgba(0, 224, 127, 0.5);
+    box-shadow: 0 4px 26px rgba(0, 224, 127, 0.12);
+  }
+  /* 프라이머리 버튼 슬라이딩 샤인 */
+  .btn.primary::after {
+    content: '';
+    position: absolute; top: 0; bottom: 0; width: 55%;
+    background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.07), transparent);
+    animation: shine 3.2s ease-in-out infinite;
+  }
+  @keyframes shine { 0% { left: -60%; } 55%, 100% { left: 120%; } }
+
+  .btn .ico {
+    flex: none;
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: grid; place-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+  .btn.primary .ico { background: var(--green-dim); border-color: rgba(0, 224, 127, 0.3); }
+  .btn .ico svg { width: 22px; height: 22px; }
+
+  .btn .txt { flex: 1; min-width: 0; }
+  .btn .txt b { display: block; font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; }
+  .btn .txt span { display: block; margin-top: 3px; font-size: 12.5px; color: var(--text-dim); font-weight: 500; }
+  .btn .arrow { flex: none; color: var(--text-dim); transition: transform 0.2s ease, color 0.2s ease; }
+  @media (hover: hover) {
+    .btn:hover .arrow { transform: translateX(3px); color: var(--green); }
+  }
+  .badge {
+    flex: none;
+    font-size: 10.5px; font-weight: 800; letter-spacing: 0.04em;
+    color: #06130c;
+    background: var(--green);
+    padding: 4px 8px; border-radius: 999px;
+  }
+
+  /* ─── 푸터 ─── */
+  footer {
+    margin-top: auto;
+    padding-top: 44px;
+    text-align: center;
+    font-size: 11px; line-height: 1.7;
+    color: rgba(138, 148, 158, 0.6);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .avatar, .ticker .dot, .btn.primary::after { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="chart-bg"></canvas>
+<div class="glow"></div>
+
+<div class="wrap">
+
+  <div class="avatar" aria-hidden="true">
+    <!-- 상승 차트 모노그램 -->
+    <svg viewBox="0 0 48 48" fill="none">
+      <path d="M6 34 L16 24 L23 29 L42 10" stroke="#00e07f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M31 10 H42 V21" stroke="#00e07f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <h1>리치트레이딩 <span class="en">RICH</span></h1>
+  <p class="tagline">BTC 실전매매 · 트레이딩 챌린지 · 실시간 시그널</p>
+
+  <div class="ticker" id="ticker">
+    <span class="dot"></span>
+    <span>BTC</span>
+    <span id="price">—</span>
+    <span class="chg" id="chg"></span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       링크 설정: 아래 href 세 곳만 바꾸면 됩니다
+       ═══════════════════════════════════════════ -->
+  <nav class="links">
+
+    <!-- 1. 트레이딩 챌린지 신청 (카카오톡 채널 1:1 채팅) -->
+    <a class="btn primary" href="https://pf.kakao.com/_ICyin/chat" target="_blank" rel="noopener">
+      <span class="ico">
+        <svg viewBox="0 0 24 24" fill="#00e07f"><path d="M12 3C6.48 3 2 6.54 2 10.9c0 2.8 1.86 5.26 4.66 6.66-.15.52-.96 3.32-.99 3.54 0 0-.02.17.09.23.11.07.24.02.24.02.32-.05 3.66-2.4 4.24-2.81.57.08 1.16.13 1.76.13 5.52 0 10-3.54 10-7.9S17.52 3 12 3z"/></svg>
+      </span>
+      <span class="txt">
+        <b>트레이딩 챌린지 신청</b>
+        <span>카카오톡 1:1 문의 · 선착순 모집</span>
+      </span>
+      <span class="badge">모집중</span>
+    </a>
+
+    <!-- 2. 텔레그램 방 입장 -->
+    <a class="btn" href="https://t.me/+lwamipsqA29hYmY1" target="_blank" rel="noopener">
+      <span class="ico">
+        <svg viewBox="0 0 24 24" fill="#4fa8e0"><path d="M9.04 15.31l-.37 5.25c.53 0 .77-.23 1.05-.5l2.5-2.4 5.18 3.8c.95.52 1.62.25 1.88-.88l3.4-15.95c.3-1.4-.51-1.95-1.43-1.6L1.4 10.73c-1.36.53-1.34 1.29-.23 1.63l5.1 1.59L18.1 6.5c.56-.37 1.07-.17.65.2L9.04 15.31z"/></svg>
+      </span>
+      <span class="txt">
+        <b>텔레그램 방 입장</b>
+        <span>실시간 시황 · 매매 시그널 공유</span>
+      </span>
+      <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+
+    <!-- 3. 유튜브 채널 (코인가이드북) -->
+    <a class="btn" href="https://www.youtube.com/@코인가이드북" target="_blank" rel="noopener">
+      <span class="ico">
+        <svg viewBox="0 0 24 24" fill="#ff4b4b"><path d="M23.5 6.19a3.02 3.02 0 00-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 00.5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 002.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 002.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
+      </span>
+      <span class="txt">
+        <b>유튜브 채널 — 코인가이드북</b>
+        <span>코스피 $1,000 챌린지 · 매매 브리핑</span>
+      </span>
+      <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+
+  </nav>
+
+  <footer>
+    투자에 대한 최종 판단과 책임은 투자자 본인에게 있습니다.<br>
+    © 2026 RICH TRADING
+  </footer>
+</div>
+
+<script>
+/* ─── 라이브 BTC 시세 (바이낸스 공개 API, 실패 시 숨김) ─── */
+(async function ticker() {
+  const el = document.getElementById('ticker');
+  const priceEl = document.getElementById('price');
+  const chgEl = document.getElementById('chg');
+  async function update() {
+    const r = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    const p = parseFloat(d.lastPrice);
+    const c = parseFloat(d.priceChangePercent);
+    priceEl.textContent = '$' + p.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    chgEl.textContent = (c >= 0 ? '+' : '') + c.toFixed(2) + '%';
+    chgEl.className = 'chg ' + (c >= 0 ? 'up' : 'down');
+    el.classList.add('on');
+  }
+  try {
+    await update();
+    setInterval(() => update().catch(() => {}), 15000);
+  } catch (e) { /* 시세 못 가져오면 그냥 숨김 */ }
+})();
+
+/* ─── 배경 캔들 차트 애니메이션 ─── */
+(function chartBg() {
+  const cv = document.getElementById('chart-bg');
+  const ctx = cv.getContext('2d');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W, H, candles, speed;
+
+  const CW = 14, GAP = 7;          // 캔들 폭·간격
+  function seed() {
+    candles = [];
+    let price = H * 0.55;
+    const n = Math.ceil(W / (CW + GAP)) + 2;
+    for (let i = 0; i < n; i++) candles.push(next(price)), price = candles[candles.length - 1].close;
+  }
+  function next(open) {
+    const drift = (Math.random() - 0.47) * H * 0.045;
+    const close = Math.min(Math.max(open + drift, H * 0.25), H * 0.85);
+    const hi = Math.min(open, close) - Math.random() * H * 0.02;
+    const lo = Math.max(open, close) + Math.random() * H * 0.02;
+    return { open, close, hi, lo };
+  }
+  function resize() {
+    const w = innerWidth || document.documentElement.clientWidth;
+    const h = innerHeight || document.documentElement.clientHeight;
+    if (!w || !h) return;                      // 리사이즈 중 0 크기 이벤트 무시
+    W = cv.width = w * devicePixelRatio;
+    H = cv.height = h * devicePixelRatio;
+    cv.style.width = w + 'px';
+    cv.style.height = h + 'px';
+    speed = W * 0.00016;
+    seed();
+  }
+  let offset = 0;
+  function draw() {
+    if (!W) { resize(); requestAnimationFrame(draw); return; }
+    ctx.clearRect(0, 0, W, H);
+    const unit = (CW + GAP) * devicePixelRatio;
+    ctx.globalAlpha = 0.16;
+    candles.forEach((c, i) => {
+      const x = i * unit - offset;
+      const up = c.close < c.open;               // 화면좌표: 위가 작음
+      ctx.strokeStyle = ctx.fillStyle = up ? '#00e07f' : '#ff5b5b';
+      ctx.lineWidth = 1.4 * devicePixelRatio;
+      ctx.beginPath();
+      ctx.moveTo(x + unit / 2, c.hi); ctx.lineTo(x + unit / 2, c.lo); ctx.stroke();
+      const top = Math.min(c.open, c.close);
+      const h = Math.max(Math.abs(c.close - c.open), 2 * devicePixelRatio);
+      ctx.fillRect(x + unit * 0.14, top, unit * 0.72, h);
+    });
+    ctx.globalAlpha = 1;
+    if (!reduced) {
+      offset += speed * devicePixelRatio;
+      if (offset >= unit) { offset -= unit; candles.shift(); candles.push(next(candles[candles.length - 1].close)); }
+    }
+    requestAnimationFrame(draw);
+  }
+  addEventListener('resize', resize);
+  resize();
+  draw();
+})();
+</script>
+</body>
+</html>
