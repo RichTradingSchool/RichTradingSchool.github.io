@@ -233,13 +233,30 @@
     padding: 4px 8px; border-radius: 999px;
   }
 
-  /* ─── 소통방 카드: 실시간 채팅 미리보기 ─── */
+  /* ─── 소통방 카드: 실시간 채팅 미리보기 (가장 강조되는 카드) ─── */
   .chatcard {
+    position: relative;
     border-radius: 17px;
-    background: var(--card);
-    border: 1px solid var(--card-border);
+    background: linear-gradient(165deg, rgba(217, 179, 68, 0.1), rgba(217, 179, 68, 0.025));
+    border: 1.5px solid rgba(217, 179, 68, 0.55);
+    box-shadow: 0 6px 32px rgba(217, 179, 68, 0.17), inset 0 0 0 1px rgba(217, 179, 68, 0.06);
     backdrop-filter: blur(10px);
     overflow: hidden;
+  }
+  /* 슬라이딩 샤인 — 프라이머리 버튼과 같은 효과로 시선을 여기로 */
+  .chatcard::after {
+    content: '';
+    position: absolute; top: 0; bottom: 0; width: 45%;
+    background: linear-gradient(105deg, transparent, rgba(255, 235, 170, 0.1), transparent);
+    animation: shine 3.6s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .chat-ribbon {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 7px 12px;
+    font-size: 11.5px; font-weight: 800; letter-spacing: 0.02em;
+    color: #1a1405;
+    background: linear-gradient(120deg, var(--gold-hi), var(--gold));
   }
   .chat-head {
     display: flex; align-items: center; gap: 13px;
@@ -369,7 +386,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .avatar, .avatar::after, .coin, .g1, .g2, .ticker .dot, .btn.primary::after,
-    .chat-live i, .msg-row:last-child { animation: none; }
+    .chat-live i, .msg-row:last-child, .chatcard::after { animation: none; }
   }
 </style>
 </head>
@@ -408,8 +425,9 @@
       <span class="badge">모집중</span>
     </a>
 
-    <!-- 2. 텔레그램 자료실 — 실시간 소통방 미리보기 카드 -->
+    <!-- 2. 텔레그램 자료실 — 실시간 소통방 미리보기 카드 (가장 강조) -->
     <div class="chatcard">
+      <div class="chat-ribbon">🔥 가장 많이 찾는 자료실 · 지금 확인하세요</div>
       <div class="chat-head">
         <span class="ico">
           <svg viewBox="0 0 24 24" fill="#4fa8e0"><path d="M9.04 15.31l-.37 5.25c.53 0 .77-.23 1.05-.5l2.5-2.4 5.18 3.8c.95.52 1.62.25 1.88-.88l3.4-15.95c.3-1.4-.51-1.95-1.43-1.6L1.4 10.73c-1.36.53-1.34 1.29-.23 1.63l5.1 1.59L18.1 6.5c.56-.37 1.07-.17.65.2L9.04 15.31z"/></svg>
@@ -429,7 +447,7 @@
     </div>
 
     <!-- 3. 실시간 트레이딩 대시보드 (리치 트레이딩 라운지) -->
-    <a class="btn" href="https://rich-trading-lounge.vercel.app/" target="_blank" rel="noopener">
+    <a class="btn" href="https://btcdash.github.io/#home" target="_blank" rel="noopener">
       <span class="ico">
         <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="7" y="13" width="3.2" height="6" rx="0.6" fill="#38bdf8" stroke="none"/><rect x="12.4" y="9" width="3.2" height="10" rx="0.6" fill="#38bdf8" stroke="none"/><rect x="17.8" y="5.5" width="3.2" height="13.5" rx="0.6" fill="#38bdf8" stroke="none"/></svg>
       </span>
