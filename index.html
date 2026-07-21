@@ -14,11 +14,12 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 
+<!-- JS가 살아있을 때만 등장 애니메이션을 건다 (스크립트가 막혀도 내용은 그대로 보이게) -->
+<script>document.documentElement.classList.add('js');</script>
+
 <style>
   :root {
-    --bg: #07090c;
-    --card: rgba(255, 255, 255, 0.045);
-    --card-border: rgba(255, 255, 255, 0.09);
+    --bg: #06080b;
     --gold: #d9b344;
     --gold-hi: #f0d468;
     --gold-dim: rgba(217, 179, 68, 0.14);
@@ -26,6 +27,12 @@
     --red: #ff5b5b;
     --text: #eef2f0;
     --text-dim: #8a949e;
+
+    /* 글라스 레이어 공통 값 */
+    --glass-bg: linear-gradient(158deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.022) 62%);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-blur: blur(20px) saturate(150%);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.11);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; }
@@ -37,40 +44,99 @@
     min-height: 100dvh;
   }
 
-  /* ─── 배경: 골드 글로우만 (은은하게) ─── */
-  .glow {
-    position: fixed;
-    width: 130vw; height: 55vh;
-    left: 50%; top: -18vh;
-    transform: translateX(-50%);
-    background: radial-gradient(ellipse at center, rgba(217, 179, 68, 0.12) 0%, transparent 65%);
-    pointer-events: none;
-    z-index: 0;
+  /* ═══ 배경: 천천히 떠다니는 오로라 + 미세 그레인 ═══ */
+  .aurora {
+    position: fixed; inset: -20%;
+    z-index: 0; pointer-events: none;
+    filter: blur(70px);
+  }
+  .aurora i {
+    position: absolute;
+    display: block;
+    border-radius: 50%;
+    opacity: 0.5;
+  }
+  .aurora .a1 {
+    width: 60vmax; height: 60vmax; top: -8%; left: 50%;
+    background: radial-gradient(circle, rgba(217, 179, 68, 0.34), transparent 66%);
+    animation: drift1 26s ease-in-out infinite;
+  }
+  .aurora .a2 {
+    width: 46vmax; height: 46vmax; top: 26%; left: -6%;
+    background: radial-gradient(circle, rgba(56, 132, 200, 0.26), transparent 68%);
+    animation: drift2 32s ease-in-out infinite;
+  }
+  .aurora .a3 {
+    width: 40vmax; height: 40vmax; bottom: -6%; right: -4%;
+    background: radial-gradient(circle, rgba(150, 96, 210, 0.2), transparent 68%);
+    animation: drift3 38s ease-in-out infinite;
+  }
+  @keyframes drift1 {
+    0%, 100% { transform: translate(-50%, 0) scale(1); }
+    50%      { transform: translate(-42%, 5%) scale(1.14); }
+  }
+  @keyframes drift2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(9%, -7%) scale(1.12); }
+  }
+  @keyframes drift3 {
+    0%, 100% { transform: translate(0, 0) scale(1.05); }
+    50%      { transform: translate(-8%, -5%) scale(0.95); }
+  }
+  /* 필름 그레인 — 글라스 표면이 너무 매끈해 보이지 않게 */
+  .grain {
+    position: fixed; inset: 0;
+    z-index: 1; pointer-events: none;
+    opacity: 0.032;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   .wrap {
     position: relative; z-index: 2;
     max-width: 480px;
     margin: 0 auto;
-    padding: clamp(40px, 10vh, 76px) 22px 36px;
+    padding: clamp(44px, 11vh, 84px) 22px 40px;
     display: flex; flex-direction: column; align-items: center;
     min-height: 100dvh;
+  }
+
+  /* ═══ 스크롤 등장 애니메이션 ═══ */
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(22px) scale(0.985);
+    filter: blur(6px);
+    transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+                filter 0.75s ease;
+    will-change: opacity, transform;
+  }
+  .js [data-reveal].in {
+    opacity: 1;
+    transform: none;
+    filter: none;
   }
 
   /* ═══ 아바타: 홀로그램 코인 스핀 + 글리치 + 스캔 ═══ */
   .avatar {
     position: relative;
-    width: 108px; height: 108px;
+    width: 112px; height: 112px;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #141a22, #090c10 70%);
-    border: 2px solid rgba(217, 179, 68, 0.6);
-    box-shadow: 0 0 38px rgba(217, 179, 68, 0.22), inset 0 0 20px rgba(217, 179, 68, 0.06);
+    background:
+      radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.1), transparent 55%),
+      radial-gradient(circle at 50% 50%, #141a22, #080b0f 72%);
+    border: 1.5px solid rgba(217, 179, 68, 0.5);
+    box-shadow:
+      0 0 46px rgba(217, 179, 68, 0.24),
+      0 10px 34px rgba(0, 0, 0, 0.5),
+      inset 0 0 22px rgba(217, 179, 68, 0.07),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16);
     display: grid; place-items: center;
-    animation: float 5s ease-in-out infinite;
     overflow: hidden;
     perspective: 520px;
   }
-  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+  /* 둥둥 뜨는 움직임은 래퍼가 담당 — 등장 애니메이션의 transform 과 충돌하지 않게 분리 */
+  .avatar-wrap { animation: float 5.5s ease-in-out infinite; }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
   /* 홀로 스캔 빛줄기 */
   .avatar::after {
@@ -79,15 +145,15 @@
     border-radius: 50%;
     background: linear-gradient(115deg,
       transparent 32%,
-      rgba(255, 240, 200, 0.15) 45%,
-      rgba(120, 220, 255, 0.10) 53%,
+      rgba(255, 240, 200, 0.16) 45%,
+      rgba(120, 220, 255, 0.11) 53%,
       transparent 66%);
     transform: translateX(-130%);
     animation: holoSweep 4.3s ease-in-out infinite;
     pointer-events: none;
   }
   @keyframes holoSweep {
-    0%, 52%  { transform: translateX(-130%); }
+    0%, 52%   { transform: translateX(-130%); }
     78%, 100% { transform: translateX(130%); }
   }
 
@@ -115,11 +181,7 @@
   }
 
   /* 글리치 고스트 레이어 — 평소엔 숨김, 주기적으로 RGB 분리+슬라이스 튐 */
-  .ghost {
-    position: absolute; inset: 0;
-    opacity: 0;
-    pointer-events: none;
-  }
+  .ghost { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
   .g1 { animation: glitch1 4.9s steps(1) infinite; }
   .g2 { animation: glitch2 4.9s steps(1) infinite; }
   @keyframes glitch1 {
@@ -136,114 +198,153 @@
   }
 
   h1 {
-    margin-top: 20px;
-    font-size: 24px; font-weight: 800; letter-spacing: -0.02em;
+    margin-top: 22px;
+    font-size: 25px; font-weight: 800; letter-spacing: -0.025em;
   }
-  h1 .en { color: var(--gold); }
+  h1 .en {
+    background: linear-gradient(100deg, var(--gold-hi), var(--gold) 55%, #b58f2a);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+  }
   .tagline {
-    margin-top: 8px;
+    margin-top: 9px;
     color: var(--text-dim);
     font-size: 14.5px; font-weight: 500;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.005em;
     text-align: center;
   }
 
-  /* ─── 라이브 BTC 시세 ─── */
+  /* ─── 라이브 BTC 시세 (작은 글라스 알약) ─── */
   .ticker {
-    margin-top: 16px;
+    margin-top: 17px;
     display: none;
     align-items: center; gap: 8px;
     padding: 7px 15px;
     border-radius: 999px;
-    background: var(--card);
-    border: 1px solid var(--card-border);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    -webkit-backdrop-filter: var(--glass-blur);
+            backdrop-filter: var(--glass-blur);
     font-size: 13.5px; font-weight: 600;
     font-variant-numeric: tabular-nums;
-    backdrop-filter: blur(8px);
   }
   .ticker.on { display: inline-flex; }
   .ticker .dot {
     width: 7px; height: 7px; border-radius: 50%;
     background: var(--green);
+    box-shadow: 0 0 8px rgba(0, 224, 127, 0.75);
     animation: pulse 1.6s ease-in-out infinite;
   }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
   .ticker .chg.up { color: var(--green); }
   .ticker .chg.down { color: var(--red); }
 
-  /* ─── 링크 버튼 ─── */
+  /* ═══ 글라스 카드 공통 ═══ */
   .links {
-    margin-top: 34px;
+    margin-top: 36px;
     width: 100%;
-    display: flex; flex-direction: column; gap: 14px;
+    display: flex; flex-direction: column; gap: 15px;
   }
-  .btn {
+  .glass {
     position: relative;
-    display: flex; align-items: center; gap: 15px;
-    padding: 17px 19px;
-    border-radius: 17px;
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    text-decoration: none; color: var(--text);
-    backdrop-filter: blur(10px);
-    transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    border-radius: 20px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    -webkit-backdrop-filter: var(--glass-blur);
+            backdrop-filter: var(--glass-blur);
     overflow: hidden;
   }
-  .btn:active { transform: scale(0.975); }
+  /* 커서를 따라다니는 은은한 하이라이트 (마우스 있는 기기에서만) */
+  .glass::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 0%),
+                rgba(255, 255, 255, 0.09), transparent 62%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
   @media (hover: hover) {
-    .btn:hover { border-color: rgba(217, 179, 68, 0.5); background: rgba(217, 179, 68, 0.05); }
+    .glass:hover::before { opacity: 1; }
+  }
+
+  .btn {
+    display: flex; align-items: center; gap: 15px;
+    padding: 17px 19px;
+    text-decoration: none; color: var(--text);
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .btn:active { transform: scale(0.978); }
+  @media (hover: hover) {
+    .btn:hover {
+      transform: translateY(-3px);
+      border-color: rgba(217, 179, 68, 0.45);
+      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.46), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
   }
   .btn.primary {
-    background: linear-gradient(120deg, rgba(217, 179, 68, 0.17), rgba(217, 179, 68, 0.05));
-    border-color: rgba(217, 179, 68, 0.55);
-    box-shadow: 0 4px 26px rgba(217, 179, 68, 0.13);
+    background:
+      linear-gradient(158deg, rgba(217, 179, 68, 0.2), rgba(217, 179, 68, 0.05) 65%),
+      var(--glass-bg);
+    border-color: rgba(217, 179, 68, 0.5);
+    box-shadow: 0 8px 34px rgba(217, 179, 68, 0.14), inset 0 1px 0 rgba(255, 240, 190, 0.2);
   }
   /* 프라이머리 버튼 슬라이딩 샤인 */
   .btn.primary::after {
     content: '';
     position: absolute; top: 0; bottom: 0; width: 55%;
-    background: linear-gradient(105deg, transparent, rgba(255, 235, 170, 0.09), transparent);
+    background: linear-gradient(105deg, transparent, rgba(255, 235, 170, 0.11), transparent);
     animation: shine 3.2s ease-in-out infinite;
+    pointer-events: none;
   }
   @keyframes shine { 0% { left: -60%; } 55%, 100% { left: 120%; } }
 
-  .btn .ico {
+  .ico {
     flex: none;
-    width: 44px; height: 44px;
-    border-radius: 12px;
+    width: 45px; height: 45px;
+    border-radius: 13px;
     display: grid; place-items: center;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
   }
-  .btn.primary .ico { background: var(--gold-dim); border-color: rgba(217, 179, 68, 0.35); }
-  .btn .ico svg { width: 22px; height: 22px; }
+  .btn.primary .ico {
+    background: linear-gradient(150deg, rgba(217, 179, 68, 0.26), rgba(217, 179, 68, 0.07));
+    border-color: rgba(217, 179, 68, 0.34);
+  }
+  .ico svg { width: 22px; height: 22px; }
 
   .btn .txt { flex: 1; min-width: 0; }
-  .btn .txt b { display: block; font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; }
+  .btn .txt b { display: block; font-size: 15.5px; font-weight: 700; letter-spacing: -0.012em; }
   .btn .txt span { display: block; margin-top: 3px; font-size: 12.5px; color: var(--text-dim); font-weight: 500; }
-  .btn .arrow { flex: none; color: var(--text-dim); transition: transform 0.2s ease, color 0.2s ease; }
+  .btn .arrow { flex: none; color: var(--text-dim); transition: transform 0.25s ease, color 0.25s ease; }
   @media (hover: hover) {
-    .btn:hover .arrow { transform: translateX(3px); color: var(--gold); }
+    .btn:hover .arrow { transform: translateX(4px); color: var(--gold); }
   }
   .badge {
     flex: none;
     font-size: 10.5px; font-weight: 800; letter-spacing: 0.04em;
     color: #1a1405;
     background: linear-gradient(135deg, var(--gold-hi), var(--gold));
+    box-shadow: 0 2px 10px rgba(217, 179, 68, 0.35);
     padding: 4px 8px; border-radius: 999px;
   }
 
-  /* ─── 소통방 카드: 실시간 채팅 미리보기 (가장 강조되는 카드) ─── */
+  /* ─── 소통방 카드 (페이지에서 가장 강조) ─── */
   .chatcard {
-    position: relative;
-    border-radius: 17px;
-    background: linear-gradient(165deg, rgba(217, 179, 68, 0.1), rgba(217, 179, 68, 0.025));
-    border: 1.5px solid rgba(217, 179, 68, 0.55);
-    box-shadow: 0 6px 32px rgba(217, 179, 68, 0.17), inset 0 0 0 1px rgba(217, 179, 68, 0.06);
-    backdrop-filter: blur(10px);
-    overflow: hidden;
+    background:
+      linear-gradient(165deg, rgba(217, 179, 68, 0.13), rgba(217, 179, 68, 0.03) 60%),
+      var(--glass-bg);
+    border-color: rgba(217, 179, 68, 0.5);
+    box-shadow:
+      0 10px 40px rgba(217, 179, 68, 0.16),
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 240, 190, 0.2);
   }
-  /* 슬라이딩 샤인 — 프라이머리 버튼과 같은 효과로 시선을 여기로 */
   .chatcard::after {
     content: '';
     position: absolute; top: 0; bottom: 0; width: 45%;
@@ -253,26 +354,18 @@
   }
   .chat-ribbon {
     display: flex; align-items: center; justify-content: center; gap: 6px;
-    padding: 7px 12px;
-    font-size: 11.5px; font-weight: 800; letter-spacing: 0.02em;
+    padding: 8px 12px;
+    font-size: 11.5px; font-weight: 800; letter-spacing: 0.01em;
     color: #1a1405;
     background: linear-gradient(120deg, var(--gold-hi), var(--gold));
+    box-shadow: 0 2px 14px rgba(217, 179, 68, 0.3);
   }
   .chat-head {
     display: flex; align-items: center; gap: 13px;
     padding: 16px 17px 13px;
   }
-  .chat-head .ico {
-    flex: none;
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    display: grid; place-items: center;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-  }
-  .chat-head .ico svg { width: 22px; height: 22px; }
   .chat-headtxt { flex: 1; min-width: 0; }
-  .chat-headtxt b { display: block; font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; }
+  .chat-headtxt b { display: block; font-size: 15.5px; font-weight: 700; letter-spacing: -0.012em; }
   .chat-headtxt span { display: block; margin-top: 3px; font-size: 12.5px; color: var(--text-dim); font-weight: 500; }
   .chat-live {
     flex: none;
@@ -280,6 +373,7 @@
     font-size: 10px; font-weight: 800; letter-spacing: 0.04em;
     color: #fff;
     background: linear-gradient(135deg, #ff5470, #e8324d);
+    box-shadow: 0 2px 12px rgba(232, 50, 77, 0.4);
     padding: 4px 9px 4px 7px; border-radius: 999px;
   }
   .chat-live i {
@@ -288,11 +382,12 @@
     animation: chatping 1.7s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
   @keyframes chatping {
-    0%       { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.65); }
+    0%        { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.65); }
     70%, 100% { box-shadow: 0 0 0 7px rgba(255, 255, 255, 0); }
   }
 
   .chat-feed {
+    position: relative; z-index: 1;
     max-height: 178px;
     overflow-y: auto;
     padding: 4px 17px 6px;
@@ -312,15 +407,15 @@
     margin-top: 11px;
   }
   .msg-row:first-child { margin-top: 0; }
-  .msg-row:last-child { animation: msgIn 0.4s ease; }
-  @keyframes msgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .msg-row:last-child { animation: msgIn 0.42s cubic-bezier(0.22, 1, 0.36, 1); }
+  @keyframes msgIn { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
   .msg-avatar {
     flex: none;
     width: 25px; height: 25px;
     border-radius: 50%;
     display: grid; place-items: center;
     font-size: 10.5px; font-weight: 800; color: #14171c;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14), 0 2px 7px rgba(0, 0, 0, 0.3);
   }
   .msg-col { flex: 1; min-width: 0; max-width: calc(100% - 33px); }
   .msg-meta { display: flex; align-items: baseline; gap: 6px; margin: 0 0 3px 2px; }
@@ -335,13 +430,14 @@
   .msg-time { font-size: 10px; color: rgba(138, 148, 158, 0.65); }
   .msg-bubble {
     display: inline-block; max-width: 100%;
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 3px 14px 14px 14px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
     overflow: hidden;
   }
   .msg-row.admin .msg-bubble {
-    background: var(--gold-dim);
+    background: rgba(217, 179, 68, 0.16);
     border-color: rgba(217, 179, 68, 0.3);
   }
   .msg-bubble img { display: block; width: 100%; max-height: 88px; object-fit: cover; }
@@ -353,55 +449,63 @@
   .msg-row.admin .msg-bubble .txt { color: #fbeec4; }
 
   .chat-note {
+    position: relative; z-index: 1;
     display: flex; align-items: center; gap: 7px;
     margin: 2px 17px 13px;
     padding: 9px 12px;
-    border-radius: 11px;
-    background: var(--gold-dim);
-    border: 1px solid rgba(217, 179, 68, 0.25);
+    border-radius: 12px;
+    background: rgba(217, 179, 68, 0.12);
+    border: 1px solid rgba(217, 179, 68, 0.24);
+    box-shadow: inset 0 1px 0 rgba(255, 240, 190, 0.12);
     font-size: 11.5px; font-weight: 600; color: var(--gold-hi);
   }
 
   .chat-enter {
+    position: relative; z-index: 1;
     display: flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 14px 16px;
-    font-size: 14px; font-weight: 700;
+    padding: 15px 16px;
+    font-size: 14.5px; font-weight: 800;
     text-decoration: none; color: #1a1405;
     background: linear-gradient(120deg, var(--gold-hi), var(--gold));
-    transition: filter 0.15s ease;
+    transition: filter 0.18s ease;
   }
   .chat-enter:active { filter: brightness(0.95); }
   @media (hover: hover) {
-    .chat-enter:hover { filter: brightness(1.06); }
+    .chat-enter:hover { filter: brightness(1.07); }
   }
 
   /* ─── 푸터 ─── */
   footer {
     margin-top: auto;
-    padding-top: 44px;
+    padding-top: 46px;
     text-align: center;
     font-size: 11px; line-height: 1.7;
-    color: rgba(138, 148, 158, 0.6);
+    color: rgba(138, 148, 158, 0.55);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .avatar, .avatar::after, .coin, .g1, .g2, .ticker .dot, .btn.primary::after,
-    .chat-live i, .msg-row:last-child, .chatcard::after { animation: none; }
+    .avatar-wrap, .avatar::after, .coin, .g1, .g2, .ticker .dot,
+    .btn.primary::after, .chatcard::after, .chat-live i, .msg-row:last-child,
+    .aurora i { animation: none; }
+    .js [data-reveal] { transition-duration: 0.01s; }
   }
 </style>
 </head>
 <body>
 
-<div class="glow"></div>
+<div class="aurora" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
+<div class="grain" aria-hidden="true"></div>
 
 <div class="wrap">
 
-  <div class="avatar" id="avatar" aria-hidden="true"></div>
+  <div class="avatar-wrap" data-reveal>
+    <div class="avatar" id="avatar" aria-hidden="true"></div>
+  </div>
 
-  <h1>리치트레이딩 <span class="en">RICH</span></h1>
-  <p class="tagline">BTC 실전매매 · 트레이딩 챌린지 · 실시간 시그널</p>
+  <h1 data-reveal>리치트레이딩 <span class="en">RICH</span></h1>
+  <p class="tagline" data-reveal>BTC 실전매매 · 트레이딩 챌린지 · 실시간 시그널</p>
 
-  <div class="ticker" id="ticker">
+  <div class="ticker" id="ticker" data-reveal>
     <span class="dot"></span>
     <span>BTC</span>
     <span id="price">—</span>
@@ -409,12 +513,12 @@
   </div>
 
   <!-- ═══════════════════════════════════════════
-       링크 설정: 아래 href 세 곳만 바꾸면 됩니다
+       링크 설정: 아래 href 네 곳만 바꾸면 됩니다
        ═══════════════════════════════════════════ -->
   <nav class="links">
 
     <!-- 1. 트레이딩 챌린지 신청 (카카오톡 채널 1:1 채팅) -->
-    <a class="btn primary" href="https://pf.kakao.com/_ICyin/chat" target="_blank" rel="noopener" data-t="kakao">
+    <a class="glass btn primary" href="https://pf.kakao.com/_ICyin/chat" target="_blank" rel="noopener" data-t="kakao" data-reveal>
       <span class="ico">
         <svg viewBox="0 0 24 24" fill="#d9b344"><path d="M12 3C6.48 3 2 6.54 2 10.9c0 2.8 1.86 5.26 4.66 6.66-.15.52-.96 3.32-.99 3.54 0 0-.02.17.09.23.11.07.24.02.24.02.32-.05 3.66-2.4 4.24-2.81.57.08 1.16.13 1.76.13 5.52 0 10-3.54 10-7.9S17.52 3 12 3z"/></svg>
       </span>
@@ -426,7 +530,7 @@
     </a>
 
     <!-- 2. 텔레그램 자료실 — 실시간 소통방 미리보기 카드 (가장 강조) -->
-    <div class="chatcard">
+    <div class="glass chatcard" data-reveal>
       <div class="chat-ribbon">🔥 가장 많이 찾는 자료실 · 지금 확인하세요</div>
       <div class="chat-head">
         <span class="ico">
@@ -439,15 +543,15 @@
         <span class="chat-live"><i></i>LIVE</span>
       </div>
       <div class="chat-feed" id="chatFeed"><div class="hint">실시간 대화 불러오는 중…</div></div>
-      <div class="chat-note">📚 각종 프리미엄 지표 & 전자책 자료실</div>
+      <div class="chat-note">📚 각종 프리미엄 지표 &amp; 전자책 자료실</div>
       <a class="chat-enter" href="https://t.me/+lwamipsqA29hYmY1" target="_blank" rel="noopener" data-t="tg">
         입장하기
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
       </a>
     </div>
 
-    <!-- 3. 실시간 트레이딩 대시보드 (리치 트레이딩 라운지) -->
-    <a class="btn" href="https://btcdash.github.io/#home" target="_blank" rel="noopener" data-t="dash">
+    <!-- 3. 실시간 트레이딩 대시보드 -->
+    <a class="glass btn" href="https://btcdash.github.io/#home" target="_blank" rel="noopener" data-t="dash" data-reveal>
       <span class="ico">
         <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="7" y="13" width="3.2" height="6" rx="0.6" fill="#38bdf8" stroke="none"/><rect x="12.4" y="9" width="3.2" height="10" rx="0.6" fill="#38bdf8" stroke="none"/><rect x="17.8" y="5.5" width="3.2" height="13.5" rx="0.6" fill="#38bdf8" stroke="none"/></svg>
       </span>
@@ -459,7 +563,7 @@
     </a>
 
     <!-- 4. 유튜브 채널 (코인가이드북) -->
-    <a class="btn" href="https://www.youtube.com/@코인가이드북" target="_blank" rel="noopener" data-t="yt">
+    <a class="glass btn" href="https://www.youtube.com/@코인가이드북" target="_blank" rel="noopener" data-t="yt" data-reveal>
       <span class="ico">
         <svg viewBox="0 0 24 24" fill="#ff4b4b"><path d="M23.5 6.19a3.02 3.02 0 00-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 00.5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 002.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 002.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
       </span>
@@ -472,7 +576,7 @@
 
   </nav>
 
-  <footer>
+  <footer data-reveal>
     투자에 대한 최종 판단과 책임은 투자자 본인에게 있습니다.<br>
     © 2026 RICH TRADING
   </footer>
@@ -553,6 +657,48 @@ document.getElementById('avatar').innerHTML = `
     </div>
     <div class="face back">${crestSVG('line', 'bk')}</div>
   </div>`;
+
+/* ─── 스크롤 등장 애니메이션 (화면에 들어올 때 순차적으로) ───
+   IntersectionObserver 는 탭이 백그라운드면 콜백이 아예 안 돈다.
+   그 상태로 두면 opacity:0 인 채 멈춰서 "빈 페이지"로 보일 수 있으므로
+   (인스타 인앱 브라우저처럼 특이한 환경 대비) 직접 위치를 재는 방식으로 처리한다. */
+(function reveal() {
+  let pending = Array.from(document.querySelectorAll('[data-reveal]'));
+  let shown = 0;
+
+  function check() {
+    if (!pending.length) return;
+    const limit = innerHeight - 40;
+    pending = pending.filter(el => {
+      const r = el.getBoundingClientRect();
+      const visible = r.top < limit && r.bottom > 0;
+      if (!visible) return true;                 // 아직 화면 밖 → 다음 기회에
+      // 한 번에 여러 개가 들어오면 살짝씩 시차를 둬서 차례로 올라오게
+      el.style.transitionDelay = Math.min(shown++, 6) * 80 + 'ms';
+      el.classList.add('in');
+      return false;
+    });
+    if (!pending.length) removeEventListener('scroll', check);
+  }
+
+  addEventListener('scroll', check, { passive: true });
+  addEventListener('resize', check);
+  addEventListener('visibilitychange', check);
+  check();
+  // 폰트 로딩 등으로 레이아웃이 늦게 잡히는 경우까지 몇 번 더 확인
+  [120, 400, 900, 1800].forEach(ms => setTimeout(check, ms));
+})();
+
+/* ─── 글라스 카드: 커서 위치를 따라가는 하이라이트 ─── */
+if (matchMedia('(hover: hover)').matches) {
+  document.querySelectorAll('.glass').forEach(card => {
+    card.addEventListener('pointermove', e => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+}
 
 /* ─── 라이브 BTC 시세 (바이낸스 공개 API, 실패 시 숨김) ─── */
 (async function ticker() {
