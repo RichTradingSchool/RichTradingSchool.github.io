@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>링크 통계 — 리치트레이딩</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root {
+    --bg: #07090c;
+    --card: rgba(255, 255, 255, 0.045);
+    --card-border: rgba(255, 255, 255, 0.09);
+    --gold: #d9b344;
+    --gold-hi: #f0d468;
+    --green: #00e07f;
+    --blue: #4fa8e0;
+    --text: #eef2f0;
+    --text-dim: #8a949e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Pretendard', -apple-system, system-ui, sans-serif;
+    padding: 28px 18px 60px;
+    -webkit-text-size-adjust: 100%;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  header { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  h1 { font-size: 21px; font-weight: 800; letter-spacing: -0.02em; }
+  h1 .en { color: var(--gold); }
+  .upd { font-size: 12px; color: var(--text-dim); }
+
+  .warn {
+    margin-top: 14px; padding: 11px 14px;
+    border-radius: 11px;
+    background: rgba(217, 179, 68, 0.1);
+    border: 1px solid rgba(217, 179, 68, 0.25);
+    font-size: 12px; line-height: 1.6; color: var(--gold-hi);
+  }
+
+  h2 {
+    margin: 28px 0 12px;
+    font-size: 13px; font-weight: 700; color: var(--text-dim);
+    letter-spacing: 0.02em;
+  }
+  h2 small { font-weight: 500; color: rgba(138, 148, 158, 0.7); }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 11px; }
+  .kpi {
+    padding: 15px 16px; border-radius: 14px;
+    background: var(--card); border: 1px solid var(--card-border);
+  }
+  .kpi .lab { font-size: 11.5px; color: var(--text-dim); font-weight: 600; }
+  .kpi .val {
+    margin-top: 6px; font-size: 26px; font-weight: 800;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+  }
+  .kpi .val small { font-size: 13px; font-weight: 600; color: var(--text-dim); margin-left: 3px; }
+  .kpi.hi .val { color: var(--gold); }
+
+  .panel {
+    padding: 16px 17px; border-radius: 14px;
+    background: var(--card); border: 1px solid var(--card-border);
+  }
+  .row { display: flex; align-items: center; gap: 11px; margin-top: 13px; }
+  .row:first-child { margin-top: 0; }
+  .row .name { flex: none; width: 118px; font-size: 12.5px; font-weight: 600; }
+  .row .name i { font-style: normal; opacity: 0.85; margin-right: 5px; }
+  .bar { flex: 1; height: 9px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); overflow: hidden; }
+  .bar span { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--gold), var(--gold-hi)); transition: width 0.5s ease; }
+  .row.src .bar span { background: linear-gradient(90deg, #3d7fb0, var(--blue)); }
+  .row .num {
+    flex: none; min-width: 66px; text-align: right;
+    font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .row .num em { font-style: normal; font-size: 11px; font-weight: 500; color: var(--text-dim); margin-left: 4px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th, td { padding: 9px 6px; text-align: right; font-variant-numeric: tabular-nums; }
+  th { font-size: 11px; color: var(--text-dim); font-weight: 600; border-bottom: 1px solid var(--card-border); }
+  td { border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
+  th:first-child, td:first-child { text-align: left; }
+  tbody tr:last-child td { border-bottom: 0; }
+
+  .empty { padding: 22px 4px; text-align: center; font-size: 12.5px; color: var(--text-dim); line-height: 1.7; }
+  .foot { margin-top: 34px; font-size: 11px; line-height: 1.8; color: rgba(138, 148, 158, 0.65); }
+  .foot code { background: rgba(255, 255, 255, 0.07); padding: 1px 5px; border-radius: 4px; font-size: 10.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>링크 통계 <span class="en">RICH</span></h1>
+    <span class="upd" id="upd">불러오는 중…</span>
+  </header>
+
+  <div class="warn" id="warn">
+    ⚠️ 실시간 집계는 <b>최근 12시간</b>만 보관됩니다 (ntfy 무료 정책). 그 이전 기록은 아래 일별 추이에서 확인하세요.
+  </div>
+
+  <h2>최근 12시간 <small>· 실시간</small></h2>
+  <div class="kpis">
+    <div class="kpi hi"><div class="lab">방문자 (고유)</div><div class="val" id="kVisitors">—</div></div>
+    <div class="kpi"><div class="lab">페이지뷰</div><div class="val" id="kViews">—</div></div>
+    <div class="kpi"><div class="lab">버튼 클릭</div><div class="val" id="kClicks">—</div></div>
+    <div class="kpi"><div class="lab">클릭률 (CTR)</div><div class="val" id="kCtr">—</div></div>
+  </div>
+
+  <h2>버튼별 클릭 <small>· 최근 12시간</small></h2>
+  <div class="panel" id="pClicks"><div class="empty">아직 클릭이 없습니다</div></div>
+
+  <h2>유입 출처 <small>· 최근 12시간 · 방문자 기준</small></h2>
+  <div class="panel" id="pSrc"><div class="empty">아직 방문이 없습니다</div></div>
+
+  <h2>일별 추이 <small>· 누적 기록</small></h2>
+  <div class="panel" id="pDaily"><div class="empty">아직 누적 기록이 없습니다</div></div>
+
+  <div class="foot">
+    개인정보는 수집하지 않습니다 — 브라우저에 저장된 무작위 id로 중복 방문만 구분합니다.<br>
+    내 방문을 집계에서 빼려면 링크 페이지를 <code>?#owner</code> 를 붙여 한 번 열어주세요.<br>
+    유입 출처를 나눠 보려면 링크 뒤에 <code>?src=insta</code> 처럼 꼬리표를 붙여 배포하세요.
+  </div>
+</div>
+
+<script>
+const TOPIC = 'https://ntfy.sh/rich-linkbio-v-k3n8x5q2';
+const LABELS = {
+  kakao: { name: '트레이딩 챌린지', icon: '💬' },
+  tg:    { name: '자료실 입장',     icon: '✈️' },
+  dash:  { name: '트레이딩 대시보드', icon: '📊' },
+  yt:    { name: '유튜브 채널',      icon: '▶️' }
+};
+const SRC_LABELS = {
+  insta: '인스타그램', yt: '유튜브', tg: '텔레그램',
+  google: '구글 검색', naver: '네이버 검색',
+  direct: '직접 방문', other: '기타'
+};
+
+const $ = id => document.getElementById(id);
+const fmt = n => n.toLocaleString('ko-KR');
+
+function renderBars(host, entries, total, cls) {
+  if (!entries.length) return;   // 비어 있으면 안내 문구 유지
+  const max = Math.max(...entries.map(e => e.count)) || 1;
+  host.innerHTML = '';
+  entries.forEach(e => {
+    const row = document.createElement('div');
+    row.className = 'row' + (cls ? ' ' + cls : '');
+    const pct = total ? Math.round(e.count / total * 100) : 0;
+    row.innerHTML =
+      '<div class="name">' + (e.icon ? '<i>' + e.icon + '</i>' : '') + e.name + '</div>' +
+      '<div class="bar"><span style="width:' + Math.round(e.count / max * 100) + '%"></span></div>' +
+      '<div class="num">' + fmt(e.count) + '<em>' + pct + '%</em></div>';
+    host.appendChild(row);
+  });
+}
+
+async function loadLive() {
+  const r = await fetch(TOPIC + '/json?poll=1&since=all');
+  if (!r.ok) throw new Error('ntfy ' + r.status);
+  const text = await r.text();
+
+  const visitors = new Set();
+  const srcByVisitor = new Map();     // 방문자당 최초 유입 출처 1회만 집계
+  const clicks = {};
+  let views = 0, totalClicks = 0;
+
+  text.split('\n').forEach(line => {
+    line = line.trim();
+    if (!line) return;
+    let ev;
+    try { ev = JSON.parse(line); } catch (e) { return; }
+    if (ev.event !== 'message' || !ev.message) return;
+    let m;
+    try { m = JSON.parse(ev.message); } catch (e) { return; }
+
+    if (m.p) {
+      views++;
+      if (m.v) visitors.add(m.v);
+      if (m.s && m.v && !srcByVisitor.has(m.v)) srcByVisitor.set(m.v, m.s);
+    }
+    if (m.c) {
+      clicks[m.c] = (clicks[m.c] || 0) + 1;
+      totalClicks++;
+    }
+  });
+
+  $('kVisitors').textContent = fmt(visitors.size);
+  $('kViews').textContent = fmt(views);
+  $('kClicks').textContent = fmt(totalClicks);
+  $('kCtr').innerHTML = visitors.size
+    ? Math.round(totalClicks / visitors.size * 100) + '<small>%</small>'
+    : '—';
+
+  // 버튼별 클릭 — 정의된 순서 유지, 모르는 태그는 뒤에 붙임
+  const order = Object.keys(LABELS);
+  const clickEntries = Object.keys(clicks)
+    .sort((a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99))
+    .map(k => ({
+      name: (LABELS[k] || {}).name || k,
+      icon: (LABELS[k] || {}).icon || '',
+      count: clicks[k]
+    }));
+  renderBars($('pClicks'), clickEntries, totalClicks);
+
+  const srcCount = {};
+  srcByVisitor.forEach(s => { srcCount[s] = (srcCount[s] || 0) + 1; });
+  const srcEntries = Object.entries(srcCount)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => ({ name: SRC_LABELS[k] || k, count: v }));
+  renderBars($('pSrc'), srcEntries, visitors.size, 'src');
+
+  $('upd').textContent = '갱신 ' + new Date().toLocaleTimeString('ko-KR', { timeZone: 'Asia/Seoul' });
+}
+
+async function loadHistory() {
+  const r = await fetch('stats.json?ts=' + Date.now());
+  if (!r.ok) return;                       // 아직 누적 파일이 없으면 조용히 건너뜀
+  const d = await r.json();
+  const days = Object.entries(d.days || {}).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 30);
+  if (!days.length) return;
+
+  const rows = days.map(([day, s]) => {
+    const clicks = Object.values(s.clicks || {}).reduce((a, b) => a + b, 0);
+    const top = Object.entries(s.src || {}).sort((a, b) => b[1] - a[1])[0];
+    return '<tr><td>' + day + '</td><td>' + fmt(s.visitors || 0) + '</td><td>' + fmt(s.views || 0) +
+           '</td><td>' + fmt(clicks) + '</td><td>' + (top ? (SRC_LABELS[top[0]] || top[0]) : '—') + '</td></tr>';
+  }).join('');
+
+  $('pDaily').innerHTML =
+    '<table><thead><tr><th>날짜</th><th>방문자</th><th>페이지뷰</th><th>클릭</th><th>주요 유입</th></tr></thead>' +
+    '<tbody>' + rows + '</tbody></table>';
+}
+
+loadLive().catch(e => {
+  $('upd').textContent = '집계 서버 연결 실패';
+  console.error(e);
+});
+loadHistory().catch(e => console.error('history', e));
+setInterval(() => loadLive().catch(() => {}), 30000);
+</script>
+</body>
+</html>

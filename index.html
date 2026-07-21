@@ -414,7 +414,7 @@
   <nav class="links">
 
     <!-- 1. 트레이딩 챌린지 신청 (카카오톡 채널 1:1 채팅) -->
-    <a class="btn primary" href="https://pf.kakao.com/_ICyin/chat" target="_blank" rel="noopener">
+    <a class="btn primary" href="https://pf.kakao.com/_ICyin/chat" target="_blank" rel="noopener" data-t="kakao">
       <span class="ico">
         <svg viewBox="0 0 24 24" fill="#d9b344"><path d="M12 3C6.48 3 2 6.54 2 10.9c0 2.8 1.86 5.26 4.66 6.66-.15.52-.96 3.32-.99 3.54 0 0-.02.17.09.23.11.07.24.02.24.02.32-.05 3.66-2.4 4.24-2.81.57.08 1.16.13 1.76.13 5.52 0 10-3.54 10-7.9S17.52 3 12 3z"/></svg>
       </span>
@@ -440,14 +440,14 @@
       </div>
       <div class="chat-feed" id="chatFeed"><div class="hint">실시간 대화 불러오는 중…</div></div>
       <div class="chat-note">📚 각종 프리미엄 지표 & 전자책 자료실</div>
-      <a class="chat-enter" href="https://t.me/+lwamipsqA29hYmY1" target="_blank" rel="noopener">
+      <a class="chat-enter" href="https://t.me/+lwamipsqA29hYmY1" target="_blank" rel="noopener" data-t="tg">
         입장하기
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
       </a>
     </div>
 
     <!-- 3. 실시간 트레이딩 대시보드 (리치 트레이딩 라운지) -->
-    <a class="btn" href="https://btcdash.github.io/#home" target="_blank" rel="noopener">
+    <a class="btn" href="https://btcdash.github.io/#home" target="_blank" rel="noopener" data-t="dash">
       <span class="ico">
         <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="7" y="13" width="3.2" height="6" rx="0.6" fill="#38bdf8" stroke="none"/><rect x="12.4" y="9" width="3.2" height="10" rx="0.6" fill="#38bdf8" stroke="none"/><rect x="17.8" y="5.5" width="3.2" height="13.5" rx="0.6" fill="#38bdf8" stroke="none"/></svg>
       </span>
@@ -459,7 +459,7 @@
     </a>
 
     <!-- 4. 유튜브 채널 (코인가이드북) -->
-    <a class="btn" href="https://www.youtube.com/@코인가이드북" target="_blank" rel="noopener">
+    <a class="btn" href="https://www.youtube.com/@코인가이드북" target="_blank" rel="noopener" data-t="yt">
       <span class="ico">
         <svg viewBox="0 0 24 24" fill="#ff4b4b"><path d="M23.5 6.19a3.02 3.02 0 00-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 00.5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 002.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 002.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
       </span>
@@ -667,6 +667,54 @@ document.getElementById('avatar').innerHTML = `
 
   load().catch(() => { feed.innerHTML = '<div class="hint">입장해서 실시간 대화를 확인해보세요</div>'; });
   setInterval(() => load().catch(() => {}), 15000);
+})();
+
+/* ═══════════════════════════════════════════════════════
+   방문·클릭 집계 (익명 · 화면 표시 없음)
+   개인정보는 수집하지 않음 — 브라우저에 저장된 무작위 id만 사용
+   조회는 stats-k3n8x5.html 에서
+   ═══════════════════════════════════════════════════════ */
+(function tracking() {
+  const TOPIC = 'https://ntfy.sh/rich-linkbio-v-k3n8x5q2';
+
+  // 관리자 기기 제외: 주소 뒤에 #owner 를 붙여 한 번 열면 이 기기는 영구 제외
+  if (location.hash === '#owner') {
+    try { localStorage.setItem('lb_owner', '1'); } catch (e) {}
+    alert('✅ 이 기기는 방문·클릭 집계에서 제외됩니다');
+    history.replaceState(null, '', location.pathname);
+  }
+  let isOwner = false;
+  try { isOwner = localStorage.getItem('lb_owner') === '1'; } catch (e) {}
+  if (isOwner) return;
+
+  // 방문자 식별용 무작위 id (개인정보 아님 · 이 브라우저에만 저장)
+  let vid = 'anon';
+  try {
+    vid = localStorage.getItem('lb_vid');
+    if (!vid) { vid = Math.random().toString(36).slice(2, 12); localStorage.setItem('lb_vid', vid); }
+  } catch (e) {}
+
+  const send = payload => {
+    try { fetch(TOPIC, { method: 'POST', body: JSON.stringify(payload) }).catch(() => {}); } catch (e) {}
+  };
+
+  // 유입 출처: ?src= 꼬리표 우선(인스타 앱은 referrer를 안 넘겨줌), 없으면 referrer로 추정
+  const srcTag = (new URLSearchParams(location.search).get('src') || '').replace(/[^a-z0-9_]/gi, '').slice(0, 10);
+  const ref = document.referrer || '';
+  const src = srcTag ? srcTag
+    : /instagram\./.test(ref) ? 'insta'
+    : /youtube\.|youtu\.be/.test(ref) ? 'yt'
+    : /t\.me|telegram\./.test(ref) ? 'tg'
+    : /google\./.test(ref) ? 'google'
+    : /naver\./.test(ref) ? 'naver'
+    : ref ? 'other' : 'direct';
+
+  send({ v: vid, p: 1, s: src });
+
+  // 버튼 클릭 집계 (data-t 속성으로 구분)
+  document.querySelectorAll('[data-t]').forEach(el => {
+    el.addEventListener('click', () => send({ v: vid, c: el.dataset.t }));
+  });
 })();
 </script>
 </body>
