@@ -1,29 +1,31 @@
 ﻿{
-    "updated":  "2026-07-23 00:07",
+    "updated":  "2026-07-23 00:37",
     "days":  {
                  "2026-07-23":  {
-                                    "visitors":  15,
-                                    "newVisitors":  14,
-                                    "views":  18,
-                                    "sessions":  18,
+                                    "visitors":  47,
+                                    "newVisitors":  45,
+                                    "views":  51,
+                                    "sessions":  51,
                                     "clicks":  {
+                                                   "dash":  1,
                                                    "tg":  1
                                                },
                                     "src":  {
-                                                "insta":  10,
-                                                "other":  8
+                                                "insta":  27,
+                                                "direct":  5,
+                                                "other":  19
                                             },
                                     "hours":  {
                                                   "00":  {
-                                                             "clicks":  1,
-                                                             "views":  18
+                                                             "clicks":  2,
+                                                             "views":  51
                                                          }
                                               },
-                                    "dwellAvg":  2.6,
-                                    "dwellMedian":  1.5,
-                                    "dwellSamples":  18,
-                                    "scrollAvg":  14.2,
-                                    "backTotal":  3
+                                    "dwellAvg":  3.6,
+                                    "dwellMedian":  2,
+                                    "dwellSamples":  50,
+                                    "scrollAvg":  11.5,
+                                    "backTotal":  10
                                 },
                  "2026-07-22":  {
                                     "visitors":  341,
