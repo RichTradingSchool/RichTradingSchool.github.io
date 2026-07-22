@@ -1,10 +1,11 @@
-# 통계 수집기 스케줄러
+﻿# 통계 수집기 스케줄러
 #
 # 이 PC 계정은 작업 스케줄러 등록 권한이 없어서(schtasks: Access denied),
 # blockmedia-telegram / btc-signal-bot 과 같은 방식으로 로그온 시 숨김 실행되는
 # 무한 루프를 쓴다. 시작 등록: Startup 폴더의 start-linkbio-stats.vbs
 #
-# ntfy 무료 채널은 12시간만 보관하므로 3시간 주기로 수집한다.
+# ntfy 는 알림 배달용이라 12시간만 캐시한다. 원본을 events.jsonl 에 영구 보관하는 게
+# 수집기의 핵심 역할이므로, 놓치는 구간이 없도록 짧은 주기로 돈다.
 $ErrorActionPreference = 'Continue'
 $root = $PSScriptRoot
 $collector = Join-Path $root 'collect-stats.ps1'
@@ -26,5 +27,5 @@ while ($true) {
     } catch {
         Write-Log "collector failed: $($_.Exception.Message)"
     }
-    Start-Sleep -Seconds 10800   # 3시간
+    Start-Sleep -Seconds 1800   # 30분 — ntfy 보관(12시간)보다 훨씬 짧게 잡아 유실 위험을 줄인다
 }

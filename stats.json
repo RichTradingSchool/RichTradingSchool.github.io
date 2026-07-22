@@ -2,19 +2,17 @@
     "updated":  "2026-07-22 22:13",
     "days":  {
                  "2026-07-22":  {
-                                    "visitors":  118,
-                                    "newVisitors":  1,
-                                    "views":  134,
-                                    "sessions":  119,
+                                    "visitors":  117,
+                                    "newVisitors":  0,
+                                    "views":  132,
+                                    "sessions":  117,
                                     "clicks":  {
-                                                   "tg":  1
+
                                                },
                                     "src":  {
+                                                "direct":  16,
                                                 "insta":  75,
-                                                "devtest":  1,
-                                                "other":  41,
-                                                "devtest2":  1,
-                                                "direct":  16
+                                                "other":  41
                                             },
                                     "hours":  {
                                                   "19":  {
@@ -30,14 +28,14 @@
                                                              "views":  51
                                                          },
                                                   "22":  {
-                                                             "clicks":  1,
-                                                             "views":  25
+                                                             "clicks":  0,
+                                                             "views":  23
                                                          }
                                               },
                                     "dwellAvg":  0,
                                     "dwellMedian":  0,
-                                    "dwellSamples":  2,
-                                    "scrollAvg":  100,
+                                    "dwellSamples":  0,
+                                    "scrollAvg":  0,
                                     "backTotal":  0
                                 }
              }

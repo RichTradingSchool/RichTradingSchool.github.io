@@ -78,6 +78,27 @@
   }
   .row .num em { font-style: normal; font-size: 11px; font-weight: 500; color: var(--text-dim); margin-left: 4px; }
 
+  /* 시간대별 세로 막대 — 텔레그램 입장 시각과 대조하기 좋게 24시간 전부 표시 */
+  .hours { display: flex; align-items: flex-end; gap: 3px; height: 132px; }
+  .hcol { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; min-width: 0; }
+  .hbar {
+    width: 100%; border-radius: 3px 3px 0 0;
+    background: linear-gradient(180deg, var(--gold-hi), rgba(217, 179, 68, 0.35));
+    min-height: 2px;
+    position: relative;
+  }
+  .hbar.zero { background: rgba(255, 255, 255, 0.07); }
+  .hbar i {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    display: block; border-radius: 2px;
+    background: linear-gradient(180deg, #7fd1c9, #3d9c94);
+  }
+  .hnum { font-size: 9.5px; color: var(--text-dim); margin-bottom: 3px; font-variant-numeric: tabular-nums; }
+  .hlab { font-size: 9px; color: rgba(138, 148, 158, 0.6); margin-top: 5px; font-variant-numeric: tabular-nums; }
+  .hlegend { display: flex; gap: 14px; margin-top: 12px; font-size: 11px; color: var(--text-dim); }
+  .hlegend span { display: inline-flex; align-items: center; gap: 5px; }
+  .hlegend b { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+
   table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
   th, td { padding: 9px 6px; text-align: right; font-variant-numeric: tabular-nums; }
   th { font-size: 11px; color: var(--text-dim); font-weight: 600; border-bottom: 1px solid var(--card-border); }
@@ -99,7 +120,8 @@
   </header>
 
   <div class="warn" id="warn">
-    ⚠️ 실시간 집계는 <b>최근 12시간</b>만 보관됩니다 (ntfy 무료 정책). 그 이전 기록은 아래 일별 추이에서 확인하세요.
+    ⚠️ 맨 위 <b>실시간</b> 칸은 ntfy 에 남아 있는 최근 12시간만 보여줍니다.
+    그 아래 <b>시간대별 · 일별</b> 기록은 30분마다 원본을 받아 영구 보관한 것이라 계속 쌓입니다.
   </div>
 
   <h2>최근 12시간 <small>· 실시간</small></h2>
@@ -116,7 +138,18 @@
   <h2>유입 출처 <small>· 최근 12시간 · 방문자 기준</small></h2>
   <div class="panel" id="pSrc"><div class="empty">아직 방문이 없습니다</div></div>
 
-  <h2>일별 추이 <small>· 누적 기록</small></h2>
+  <h2>시간대별 방문 <small>· <span id="hourDay">—</span> · 영구 기록</small></h2>
+  <div class="panel" id="pHours"><div class="empty">아직 누적 기록이 없습니다</div></div>
+
+  <h2>참여도 <small>· <span id="engDay">—</span></small></h2>
+  <div class="kpis">
+    <div class="kpi"><div class="lab">체류시간 (중앙값)</div><div class="val" id="kDwell">—</div></div>
+    <div class="kpi"><div class="lab">체류시간 (평균)</div><div class="val" id="kDwellAvg">—</div></div>
+    <div class="kpi"><div class="lab">스크롤 깊이 (평균)</div><div class="val" id="kScroll">—</div></div>
+    <div class="kpi"><div class="lab">신규 / 재방문</div><div class="val" id="kNewRet">—</div></div>
+  </div>
+
+  <h2>일별 추이 <small>· 영구 기록</small></h2>
   <div class="panel" id="pDaily"><div class="empty">아직 누적 기록이 없습니다</div></div>
 
   <div class="foot">
@@ -217,6 +250,46 @@ async function loadLive() {
   $('upd').textContent = '갱신 ' + new Date().toLocaleTimeString('ko-KR', { timeZone: 'Asia/Seoul' });
 }
 
+function fmtDuration(sec) {
+  sec = Math.round(sec || 0);
+  if (!sec) return '—';
+  if (sec < 60) return sec + '<small>초</small>';
+  return Math.floor(sec / 60) + '<small>분</small> ' + (sec % 60) + '<small>초</small>';
+}
+
+function renderHours(day, s) {
+  $('hourDay').textContent = day;
+  const hours = s.hours || {};
+  const max = Math.max(1, ...Object.values(hours).map(h => h.views || 0));
+  let html = '<div class="hours">';
+  for (let h = 0; h < 24; h++) {
+    const key = String(h).padStart(2, '0');
+    const v = (hours[key] || {}).views || 0;
+    const c = (hours[key] || {}).clicks || 0;
+    const pct = Math.round(v / max * 100);
+    html += '<div class="hcol" title="' + key + '시 · 방문 ' + v + ' · 클릭 ' + c + '">' +
+              (v ? '<div class="hnum">' + v + '</div>' : '') +
+              '<div class="hbar' + (v ? '' : ' zero') + '" style="height:' + (v ? Math.max(4, pct) : 3) + '%">' +
+                (c ? '<i style="height:' + Math.round(c / Math.max(v, c) * 100) + '%"></i>' : '') +
+              '</div>' +
+              '<div class="hlab">' + h + '</div>' +
+            '</div>';
+  }
+  html += '</div><div class="hlegend">' +
+          '<span><b style="background:var(--gold)"></b>방문</span>' +
+          '<span><b style="background:#7fd1c9"></b>클릭</span></div>';
+  $('pHours').innerHTML = html;
+}
+
+function renderEngagement(day, s) {
+  $('engDay').textContent = day;
+  $('kDwell').innerHTML = s.dwellSamples ? fmtDuration(s.dwellMedian) : '—';
+  $('kDwellAvg').innerHTML = s.dwellSamples ? fmtDuration(s.dwellAvg) : '—';
+  $('kScroll').innerHTML = s.dwellSamples ? Math.round(s.scrollAvg || 0) + '<small>%</small>' : '—';
+  const nv = s.newVisitors || 0, tot = s.visitors || 0;
+  $('kNewRet').innerHTML = tot ? fmt(nv) + ' <small>/</small> ' + fmt(Math.max(0, tot - nv)) : '—';
+}
+
 async function loadHistory() {
   const r = await fetch('stats.json?ts=' + Date.now());
   if (!r.ok) return;                       // 아직 누적 파일이 없으면 조용히 건너뜀
@@ -224,15 +297,20 @@ async function loadHistory() {
   const days = Object.entries(d.days || {}).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 30);
   if (!days.length) return;
 
+  renderHours(days[0][0], days[0][1]);
+  renderEngagement(days[0][0], days[0][1]);
+
   const rows = days.map(([day, s]) => {
     const clicks = Object.values(s.clicks || {}).reduce((a, b) => a + b, 0);
     const top = Object.entries(s.src || {}).sort((a, b) => b[1] - a[1])[0];
-    return '<tr><td>' + day + '</td><td>' + fmt(s.visitors || 0) + '</td><td>' + fmt(s.views || 0) +
-           '</td><td>' + fmt(clicks) + '</td><td>' + (top ? (SRC_LABELS[top[0]] || top[0]) : '—') + '</td></tr>';
+    const dwell = s.dwellSamples ? Math.round(s.dwellMedian) + '초' : '—';
+    return '<tr><td>' + day + '</td><td>' + fmt(s.visitors || 0) + '</td><td>' + fmt(s.newVisitors || 0) +
+           '</td><td>' + fmt(s.views || 0) + '</td><td>' + fmt(clicks) + '</td><td>' + dwell +
+           '</td><td>' + (top ? (SRC_LABELS[top[0]] || top[0]) : '—') + '</td></tr>';
   }).join('');
 
   $('pDaily').innerHTML =
-    '<table><thead><tr><th>날짜</th><th>방문자</th><th>페이지뷰</th><th>클릭</th><th>주요 유입</th></tr></thead>' +
+    '<table><thead><tr><th>날짜</th><th>방문자</th><th>신규</th><th>페이지뷰</th><th>클릭</th><th>체류(중앙)</th><th>주요 유입</th></tr></thead>' +
     '<tbody>' + rows + '</tbody></table>';
 }
 

@@ -865,12 +865,17 @@ if (matchMedia('(hover: hover)').matches) {
   try { isOwner = localStorage.getItem('lb_owner') === '1'; } catch (e) {}
   if (isOwner) return;
 
-  // 방문자 식별용 무작위 id (개인정보 아님 · 이 브라우저에만 저장)
-  let vid = 'anon';
+  // 방문자 식별용 무작위 id (개인정보 아님 · 이 브라우저에만 저장) + 몇 번째 방문인지
+  let vid = 'anon', visitNo = 1;
   try {
     vid = localStorage.getItem('lb_vid');
     if (!vid) { vid = Math.random().toString(36).slice(2, 12); localStorage.setItem('lb_vid', vid); }
+    visitNo = (parseInt(localStorage.getItem('lb_n'), 10) || 0) + 1;
+    localStorage.setItem('lb_n', String(visitNo));
   } catch (e) {}
+
+  // 이번 방문(세션) 식별자 — 같은 사람의 재방문과 구분하려고 매번 새로 만든다
+  const sid = Math.random().toString(36).slice(2, 10);
 
   // 버튼을 누르면 곧바로 다른 앱·페이지로 넘어가는데, 그때 일반 fetch 는 전송 도중 취소된다
   // (실제로 방문 83건 동안 클릭이 0건으로 기록된 원인). sendBeacon 은 페이지가 사라져도
@@ -894,12 +899,45 @@ if (matchMedia('(hover: hover)').matches) {
     : /naver\./.test(ref) ? 'naver'
     : ref ? 'other' : 'direct';
 
-  send({ v: vid, p: 1, s: src });
+  send({ v: vid, sid: sid, p: 1, s: src, n: visitNo });
 
   // 버튼 클릭 집계 (data-t 속성으로 구분)
   document.querySelectorAll('[data-t]').forEach(el => {
-    el.addEventListener('click', () => send({ v: vid, c: el.dataset.t }));
+    el.addEventListener('click', () => send({ v: vid, sid: sid, c: el.dataset.t }));
   });
+
+  /* 체류시간 · 스크롤 깊이 · 재진입 횟수
+     화면이 실제로 보이는 동안만 시간을 더한다(탭을 묻어두거나 다른 앱에 가 있는 시간 제외).
+     떠날 때 한 번에 보내며, 뒤로 돌아왔다 다시 떠나면 누적값을 다시 보낸다 —
+     수집기가 세션별 최댓값만 취하므로 중복 전송은 문제되지 않는다. */
+  let visibleSince = document.visibilityState === 'visible' ? Date.now() : 0;
+  let dwellMs = 0, maxScroll = 0, backCount = 0;
+
+  function scrollPct() {
+    const room = document.documentElement.scrollHeight - innerHeight;
+    return room > 0 ? Math.min(100, Math.round(scrollY / room * 100)) : 100;
+  }
+  maxScroll = scrollPct();
+  addEventListener('scroll', () => {
+    const p = scrollPct();
+    if (p > maxScroll) maxScroll = p;
+  }, { passive: true });
+
+  function flush() {
+    if (visibleSince) { dwellMs += Date.now() - visibleSince; visibleSince = 0; }
+    send({ v: vid, sid: sid, d: Math.round(dwellMs / 1000), sc: maxScroll, b: backCount });
+  }
+
+  // visibilitychange 는 document 에서 발생한다. window 에 걸면 버블링에 의존하게 되므로 document 에 직접 건다
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      flush();                       // 버튼 눌러 앱으로 넘어가거나 탭을 덮을 때
+    } else {
+      visibleSince = Date.now();
+      backCount++;                   // 뒤로가기·앱에서 돌아온 횟수
+    }
+  });
+  addEventListener('pagehide', flush);
 })();
 </script>
 </body>
