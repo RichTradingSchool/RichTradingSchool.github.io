@@ -335,7 +335,12 @@
   }
 
   /* ─── 소통방 카드 (페이지에서 가장 강조) ─── */
+  /* 카드 전체가 링크 — 예전엔 맨 아래 '입장하기' 바만 눌렸는데,
+     카드 본체를 눌러본 사람은 아무 반응이 없어 그냥 이탈했다 */
   .chatcard {
+    display: block;
+    text-decoration: none; color: var(--text);
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
     background:
       linear-gradient(165deg, rgba(217, 179, 68, 0.13), rgba(217, 179, 68, 0.03) 60%),
       var(--glass-bg);
@@ -469,9 +474,14 @@
     background: linear-gradient(120deg, var(--gold-hi), var(--gold));
     transition: filter 0.18s ease;
   }
-  .chat-enter:active { filter: brightness(0.95); }
+  .chatcard:active { transform: scale(0.985); }
   @media (hover: hover) {
-    .chat-enter:hover { filter: brightness(1.07); }
+    .chatcard:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(217, 179, 68, 0.22), 0 10px 34px rgba(0, 0, 0, 0.45),
+                  inset 0 1px 0 rgba(255, 240, 190, 0.22);
+    }
+    .chatcard:hover .chat-enter { filter: brightness(1.07); }
   }
 
   /* ─── 푸터 ─── */
@@ -530,7 +540,7 @@
     </a>
 
     <!-- 2. 텔레그램 자료실 — 실시간 소통방 미리보기 카드 (가장 강조) -->
-    <div class="glass chatcard" data-reveal>
+    <a class="glass chatcard" href="https://t.me/+lwamipsqA29hYmY1" target="_blank" rel="noopener" data-t="tg" data-reveal>
       <div class="chat-ribbon">🔥 가장 많이 찾는 자료실 · 지금 확인하세요</div>
       <div class="chat-head">
         <span class="ico">
@@ -544,11 +554,11 @@
       </div>
       <div class="chat-feed" id="chatFeed"><div class="hint">실시간 대화 불러오는 중…</div></div>
       <div class="chat-note">📚 각종 프리미엄 지표 &amp; 전자책 자료실</div>
-      <a class="chat-enter" href="https://t.me/+lwamipsqA29hYmY1" target="_blank" rel="noopener" data-t="tg">
+      <span class="chat-enter">
         입장하기
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-      </a>
-    </div>
+      </span>
+    </a>
 
     <!-- 3. 실시간 트레이딩 대시보드 -->
     <a class="glass btn" href="https://btcdash.github.io/#home" target="_blank" rel="noopener" data-t="dash" data-reveal>
@@ -666,9 +676,20 @@ document.getElementById('avatar').innerHTML = `
   let pending = Array.from(document.querySelectorAll('[data-reveal]'));
   let shown = 0;
 
+  function revealAll() {
+    pending.forEach(el => el.classList.add('in'));
+    pending = [];
+    removeEventListener('scroll', check);
+  }
+
   function check() {
     if (!pending.length) return;
-    const limit = innerHeight - 40;
+    // 아직 레이아웃이 안 잡힌 탭에서는 innerHeight 가 0 으로 나온다.
+    // 그 값을 그대로 쓰면 '전부 화면 밖' 으로 판정돼 페이지가 빈 채로 굳으므로,
+    // 높이를 못 재면 숨기지 말고 그냥 다 보여준다.
+    const vh = innerHeight || document.documentElement.clientHeight || 0;
+    if (!vh) { revealAll(); return; }
+    const limit = vh - 40;
     pending = pending.filter(el => {
       const r = el.getBoundingClientRect();
       const visible = r.top < limit && r.bottom > 0;
@@ -813,6 +834,17 @@ if (matchMedia('(hover: hover)').matches) {
 
   load().catch(() => { feed.innerHTML = '<div class="hint">입장해서 실시간 대화를 확인해보세요</div>'; });
   setInterval(() => load().catch(() => {}), 15000);
+
+  // 카드 전체가 링크라서, 대화 목록을 위아래로 넘기다 손을 떼면 방으로 들어가 버린다.
+  // 손가락이 움직였으면 그건 스크롤이지 클릭이 아니므로 취소한다.
+  let startY = null, dragged = false;
+  feed.addEventListener('touchstart', e => { startY = e.touches[0].clientY; dragged = false; }, { passive: true });
+  feed.addEventListener('touchmove', e => {
+    if (startY !== null && Math.abs(e.touches[0].clientY - startY) > 8) dragged = true;
+  }, { passive: true });
+  feed.addEventListener('click', e => {
+    if (dragged) { e.preventDefault(); e.stopPropagation(); }
+  }, true);
 })();
 
 /* ═══════════════════════════════════════════════════════
@@ -840,8 +872,15 @@ if (matchMedia('(hover: hover)').matches) {
     if (!vid) { vid = Math.random().toString(36).slice(2, 12); localStorage.setItem('lb_vid', vid); }
   } catch (e) {}
 
+  // 버튼을 누르면 곧바로 다른 앱·페이지로 넘어가는데, 그때 일반 fetch 는 전송 도중 취소된다
+  // (실제로 방문 83건 동안 클릭이 0건으로 기록된 원인). sendBeacon 은 페이지가 사라져도
+  // 브라우저가 대신 마저 보내주므로 이탈 직전 전송에는 이쪽을 쓴다.
   const send = payload => {
-    try { fetch(TOPIC, { method: 'POST', body: JSON.stringify(payload) }).catch(() => {}); } catch (e) {}
+    const body = JSON.stringify(payload);
+    try {
+      if (navigator.sendBeacon && navigator.sendBeacon(TOPIC, body)) return;
+    } catch (e) {}
+    try { fetch(TOPIC, { method: 'POST', body: body, keepalive: true }).catch(() => {}); } catch (e) {}
   };
 
   // 유입 출처: ?src= 꼬리표 우선(인스타 앱은 referrer를 안 넘겨줌), 없으면 referrer로 추정
