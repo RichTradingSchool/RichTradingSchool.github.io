@@ -1,18 +1,19 @@
 ﻿{
-    "updated":  "2026-07-22 22:38",
+    "updated":  "2026-07-22 23:09",
     "days":  {
                  "2026-07-22":  {
-                                    "visitors":  164,
-                                    "newVisitors":  46,
-                                    "views":  185,
-                                    "sessions":  170,
+                                    "visitors":  257,
+                                    "newVisitors":  139,
+                                    "views":  289,
+                                    "sessions":  274,
                                     "clicks":  {
-
+                                                   "dash":  1,
+                                                   "tg":  1
                                                },
                                     "src":  {
-                                                "direct":  21,
-                                                "insta":  111,
-                                                "other":  53
+                                                "direct":  29,
+                                                "insta":  172,
+                                                "other":  88
                                             },
                                     "hours":  {
                                                   "19":  {
@@ -28,15 +29,19 @@
                                                              "views":  51
                                                          },
                                                   "22":  {
+                                                             "clicks":  2,
+                                                             "views":  149
+                                                         },
+                                                  "23":  {
                                                              "clicks":  0,
-                                                             "views":  76
+                                                             "views":  31
                                                          }
                                               },
-                                    "dwellAvg":  1.9,
-                                    "dwellMedian":  1,
-                                    "dwellSamples":  50,
-                                    "scrollAvg":  3.9,
-                                    "backTotal":  6
+                                    "dwellAvg":  2.4,
+                                    "dwellMedian":  2,
+                                    "dwellSamples":  153,
+                                    "scrollAvg":  8.4,
+                                    "backTotal":  31
                                 }
              }
 }
