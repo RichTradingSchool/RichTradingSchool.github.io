@@ -1,18 +1,18 @@
 ﻿{
-    "updated":  "2026-07-22 22:05",
+    "updated":  "2026-07-22 22:08",
     "days":  {
                  "2026-07-22":  {
-                                    "visitors":  105,
+                                    "visitors":  111,
                                     "newVisitors":  0,
-                                    "views":  119,
-                                    "sessions":  105,
+                                    "views":  126,
+                                    "sessions":  111,
                                     "clicks":  {
 
                                                },
                                     "src":  {
                                                 "direct":  16,
-                                                "insta":  67,
-                                                "other":  36
+                                                "insta":  73,
+                                                "other":  37
                                             },
                                     "hours":  {
                                                   "19":  {
@@ -29,7 +29,7 @@
                                                          },
                                                   "22":  {
                                                              "clicks":  0,
-                                                             "views":  10
+                                                             "views":  17
                                                          }
                                               },
                                     "dwellAvg":  0,
