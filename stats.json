@@ -1,16 +1,16 @@
 ﻿{
-    "updated":  "2026-07-22 20:35",
+    "updated":  "2026-07-22 21:33",
     "days":  {
                  "2026-07-22":  {
-                                    "visitors":  46,
-                                    "views":  49,
+                                    "visitors":  83,
+                                    "views":  99,
                                     "clicks":  {
 
                                                },
                                     "src":  {
-                                                "direct":  8,
-                                                "insta":  32,
-                                                "other":  9
+                                                "direct":  19,
+                                                "insta":  51,
+                                                "other":  29
                                             }
                                 }
              }
