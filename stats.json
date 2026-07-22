@@ -1,17 +1,42 @@
 ﻿{
-    "updated":  "2026-07-22 21:33",
+    "updated":  "2026-07-22 22:05",
     "days":  {
                  "2026-07-22":  {
-                                    "visitors":  83,
-                                    "views":  99,
+                                    "visitors":  105,
+                                    "newVisitors":  0,
+                                    "views":  119,
+                                    "sessions":  105,
                                     "clicks":  {
 
                                                },
                                     "src":  {
-                                                "direct":  19,
-                                                "insta":  51,
-                                                "other":  29
-                                            }
+                                                "direct":  16,
+                                                "insta":  67,
+                                                "other":  36
+                                            },
+                                    "hours":  {
+                                                  "19":  {
+                                                             "clicks":  0,
+                                                             "views":  10
+                                                         },
+                                                  "20":  {
+                                                             "clicks":  0,
+                                                             "views":  48
+                                                         },
+                                                  "21":  {
+                                                             "clicks":  0,
+                                                             "views":  51
+                                                         },
+                                                  "22":  {
+                                                             "clicks":  0,
+                                                             "views":  10
+                                                         }
+                                              },
+                                    "dwellAvg":  0,
+                                    "dwellMedian":  0,
+                                    "dwellSamples":  0,
+                                    "scrollAvg":  0,
+                                    "backTotal":  0
                                 }
              }
 }
