@@ -1,19 +1,44 @@
 ﻿{
-    "updated":  "2026-07-22 23:39",
+    "updated":  "2026-07-23 00:07",
     "days":  {
-                 "2026-07-22":  {
-                                    "visitors":  303,
-                                    "newVisitors":  185,
-                                    "views":  341,
-                                    "sessions":  326,
+                 "2026-07-23":  {
+                                    "visitors":  15,
+                                    "newVisitors":  14,
+                                    "views":  18,
+                                    "sessions":  18,
                                     "clicks":  {
-                                                   "dash":  1,
                                                    "tg":  1
                                                },
                                     "src":  {
-                                                "direct":  32,
-                                                "insta":  208,
-                                                "other":  101
+                                                "insta":  10,
+                                                "other":  8
+                                            },
+                                    "hours":  {
+                                                  "00":  {
+                                                             "clicks":  1,
+                                                             "views":  18
+                                                         }
+                                              },
+                                    "dwellAvg":  2.6,
+                                    "dwellMedian":  1.5,
+                                    "dwellSamples":  18,
+                                    "scrollAvg":  14.2,
+                                    "backTotal":  3
+                                },
+                 "2026-07-22":  {
+                                    "visitors":  341,
+                                    "newVisitors":  223,
+                                    "views":  388,
+                                    "sessions":  373,
+                                    "clicks":  {
+                                                   "tg":  2,
+                                                   "dash":  2,
+                                                   "yt":  1
+                                               },
+                                    "src":  {
+                                                "direct":  34,
+                                                "insta":  241,
+                                                "other":  113
                                             },
                                     "hours":  {
                                                   "19":  {
@@ -33,15 +58,15 @@
                                                              "views":  149
                                                          },
                                                   "23":  {
-                                                             "clicks":  0,
-                                                             "views":  83
+                                                             "clicks":  3,
+                                                             "views":  130
                                                          }
                                               },
-                                    "dwellAvg":  2.4,
+                                    "dwellAvg":  2.7,
                                     "dwellMedian":  2,
-                                    "dwellSamples":  204,
-                                    "scrollAvg":  6.8,
-                                    "backTotal":  46
+                                    "dwellSamples":  249,
+                                    "scrollAvg":  7.5,
+                                    "backTotal":  51
                                 }
              }
 }
