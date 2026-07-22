@@ -1,18 +1,18 @@
 ﻿{
-    "updated":  "2026-07-22 22:13",
+    "updated":  "2026-07-22 22:38",
     "days":  {
                  "2026-07-22":  {
-                                    "visitors":  117,
-                                    "newVisitors":  0,
-                                    "views":  132,
-                                    "sessions":  117,
+                                    "visitors":  164,
+                                    "newVisitors":  46,
+                                    "views":  185,
+                                    "sessions":  170,
                                     "clicks":  {
 
                                                },
                                     "src":  {
-                                                "direct":  16,
-                                                "insta":  75,
-                                                "other":  41
+                                                "direct":  21,
+                                                "insta":  111,
+                                                "other":  53
                                             },
                                     "hours":  {
                                                   "19":  {
@@ -29,14 +29,14 @@
                                                          },
                                                   "22":  {
                                                              "clicks":  0,
-                                                             "views":  23
+                                                             "views":  76
                                                          }
                                               },
-                                    "dwellAvg":  0,
-                                    "dwellMedian":  0,
-                                    "dwellSamples":  0,
-                                    "scrollAvg":  0,
-                                    "backTotal":  0
+                                    "dwellAvg":  1.9,
+                                    "dwellMedian":  1,
+                                    "dwellSamples":  50,
+                                    "scrollAvg":  3.9,
+                                    "backTotal":  6
                                 }
              }
 }
