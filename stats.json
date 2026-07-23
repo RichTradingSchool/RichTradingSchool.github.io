@@ -1,11 +1,11 @@
 ﻿{
-    "updated":  "2026-07-23 17:40",
+    "updated":  "2026-07-23 21:41",
     "days":  {
                  "2026-07-23":  {
-                                    "visitors":  67,
-                                    "newVisitors":  66,
-                                    "views":  75,
-                                    "sessions":  75,
+                                    "visitors":  68,
+                                    "newVisitors":  67,
+                                    "views":  76,
+                                    "sessions":  76,
                                     "clicks":  {
                                                    "kakao":  2,
                                                    "tg":  2,
@@ -13,7 +13,7 @@
                                                },
                                     "src":  {
                                                 "insta":  33,
-                                                "direct":  18,
+                                                "direct":  19,
                                                 "other":  24
                                             },
                                     "hours":  {
@@ -42,6 +42,10 @@
                                                              "views":  4
                                                          },
                                                   "17":  {
+                                                             "clicks":  0,
+                                                             "views":  1
+                                                         },
+                                                  "21":  {
                                                              "clicks":  0,
                                                              "views":  1
                                                          }
