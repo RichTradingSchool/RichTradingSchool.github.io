@@ -1,11 +1,11 @@
 ﻿{
-    "updated":  "2026-07-23 12:10",
+    "updated":  "2026-07-23 17:40",
     "days":  {
                  "2026-07-23":  {
-                                    "visitors":  66,
-                                    "newVisitors":  65,
-                                    "views":  74,
-                                    "sessions":  74,
+                                    "visitors":  67,
+                                    "newVisitors":  66,
+                                    "views":  75,
+                                    "sessions":  75,
                                     "clicks":  {
                                                    "kakao":  2,
                                                    "tg":  2,
@@ -13,7 +13,7 @@
                                                },
                                     "src":  {
                                                 "insta":  33,
-                                                "direct":  17,
+                                                "direct":  18,
                                                 "other":  24
                                             },
                                     "hours":  {
@@ -40,6 +40,10 @@
                                                   "11":  {
                                                              "clicks":  2,
                                                              "views":  4
+                                                         },
+                                                  "17":  {
+                                                             "clicks":  0,
+                                                             "views":  1
                                                          }
                                               },
                                     "dwellAvg":  9.3,
