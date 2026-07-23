@@ -1,11 +1,11 @@
 ﻿{
-    "updated":  "2026-07-23 11:40",
+    "updated":  "2026-07-23 12:10",
     "days":  {
                  "2026-07-23":  {
-                                    "visitors":  65,
-                                    "newVisitors":  64,
-                                    "views":  73,
-                                    "sessions":  73,
+                                    "visitors":  66,
+                                    "newVisitors":  65,
+                                    "views":  74,
+                                    "sessions":  74,
                                     "clicks":  {
                                                    "kakao":  2,
                                                    "tg":  2,
@@ -13,7 +13,7 @@
                                                },
                                     "src":  {
                                                 "insta":  33,
-                                                "direct":  16,
+                                                "direct":  17,
                                                 "other":  24
                                             },
                                     "hours":  {
@@ -39,13 +39,13 @@
                                                          },
                                                   "11":  {
                                                              "clicks":  2,
-                                                             "views":  3
+                                                             "views":  4
                                                          }
                                               },
                                     "dwellAvg":  9.3,
                                     "dwellMedian":  2,
-                                    "dwellSamples":  72,
-                                    "scrollAvg":  14.4,
+                                    "dwellSamples":  73,
+                                    "scrollAvg":  15.5,
                                     "backTotal":  13
                                 },
                  "2026-07-22":  {
