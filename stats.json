@@ -1,26 +1,30 @@
 ﻿{
-    "updated":  "2026-07-24 19:11",
+    "updated":  "2026-07-24 20:42",
     "days":  {
                  "2026-07-24":  {
-                                    "visitors":  1,
-                                    "newVisitors":  1,
-                                    "views":  1,
-                                    "sessions":  1,
+                                    "visitors":  2,
+                                    "newVisitors":  2,
+                                    "views":  2,
+                                    "sessions":  2,
                                     "clicks":  {
 
                                                },
                                     "src":  {
-                                                "direct":  1
+                                                "direct":  2
                                             },
                                     "hours":  {
                                                   "18":  {
                                                              "clicks":  0,
                                                              "views":  1
+                                                         },
+                                                  "20":  {
+                                                             "clicks":  0,
+                                                             "views":  1
                                                          }
                                               },
-                                    "dwellAvg":  22,
-                                    "dwellMedian":  22,
-                                    "dwellSamples":  1,
+                                    "dwellAvg":  18.5,
+                                    "dwellMedian":  18.5,
+                                    "dwellSamples":  2,
                                     "scrollAvg":  100,
                                     "backTotal":  0
                                 },
