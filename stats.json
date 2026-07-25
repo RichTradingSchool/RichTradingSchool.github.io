@@ -1,27 +1,31 @@
 ﻿{
-    "updated":  "2026-07-25 09:42",
+    "updated":  "2026-07-25 18:42",
     "days":  {
                  "2026-07-25":  {
-                                    "visitors":  1,
-                                    "newVisitors":  1,
-                                    "views":  1,
-                                    "sessions":  1,
+                                    "visitors":  2,
+                                    "newVisitors":  2,
+                                    "views":  2,
+                                    "sessions":  2,
                                     "clicks":  {
 
                                                },
                                     "src":  {
-                                                "direct":  1
+                                                "direct":  2
                                             },
                                     "hours":  {
                                                   "09":  {
                                                              "clicks":  0,
                                                              "views":  1
+                                                         },
+                                                  "18":  {
+                                                             "clicks":  0,
+                                                             "views":  1
                                                          }
                                               },
-                                    "dwellAvg":  0,
-                                    "dwellMedian":  0,
-                                    "dwellSamples":  0,
-                                    "scrollAvg":  0,
+                                    "dwellAvg":  13,
+                                    "dwellMedian":  13,
+                                    "dwellSamples":  1,
+                                    "scrollAvg":  56,
                                     "backTotal":  0
                                 },
                  "2026-07-24":  {
