@@ -1,16 +1,16 @@
 ﻿{
-    "updated":  "2026-10-16 10:26",
+    "updated":  "2026-10-16 13:56",
     "days":  {
                  "2026-10-16":  {
-                                    "visitors":  2,
-                                    "newVisitors":  2,
-                                    "views":  2,
-                                    "sessions":  2,
+                                    "visitors":  3,
+                                    "newVisitors":  3,
+                                    "views":  3,
+                                    "sessions":  3,
                                     "clicks":  {
 
                                                },
                                     "src":  {
-                                                "direct":  2
+                                                "direct":  3
                                             },
                                     "hours":  {
                                                   "05":  {
@@ -18,6 +18,10 @@
                                                              "views":  1
                                                          },
                                                   "10":  {
+                                                             "clicks":  0,
+                                                             "views":  1
+                                                         },
+                                                  "13":  {
                                                              "clicks":  0,
                                                              "views":  1
                                                          }
