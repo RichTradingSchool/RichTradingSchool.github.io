@@ -1,5 +1,5 @@
 ﻿{
-    "updated":  "2026-10-21 02:42",
+    "updated":  "2026-10-21 03:12",
     "days":  {
                  "2026-10-21":  {
                                     "visitors":  2,
@@ -10,7 +10,7 @@
                                                    "kakao":  1,
                                                    "tg":  3,
                                                    "dash":  3,
-                                                   "yt":  1
+                                                   "yt":  2
                                                },
                                     "src":  {
                                                 "direct":  3
@@ -21,15 +21,15 @@
                                                              "views":  1
                                                          },
                                                   "02":  {
-                                                             "clicks":  6,
+                                                             "clicks":  7,
                                                              "views":  2
                                                          }
                                               },
-                                    "dwellAvg":  95,
+                                    "dwellAvg":  95.7,
                                     "dwellMedian":  44,
                                     "dwellSamples":  3,
                                     "scrollAvg":  100,
-                                    "backTotal":  8
+                                    "backTotal":  9
                                 },
                  "2026-10-20":  {
                                     "visitors":  1,
