@@ -1,27 +1,31 @@
 ﻿{
-    "updated":  "2026-10-23 09:55",
+    "updated":  "2026-10-23 10:25",
     "days":  {
                  "2026-10-23":  {
-                                    "visitors":  0,
-                                    "newVisitors":  0,
-                                    "views":  0,
-                                    "sessions":  0,
+                                    "visitors":  2,
+                                    "newVisitors":  2,
+                                    "views":  2,
+                                    "sessions":  2,
                                     "clicks":  {
 
                                                },
                                     "src":  {
-
+                                                "direct":  2
                                             },
                                     "hours":  {
                                                   "09":  {
-                                                             "views":  0,
-                                                             "clicks":  0
+                                                             "clicks":  0,
+                                                             "views":  1
+                                                         },
+                                                  "10":  {
+                                                             "clicks":  0,
+                                                             "views":  1
                                                          }
                                               },
-                                    "dwellAvg":  12,
-                                    "dwellMedian":  12,
-                                    "dwellSamples":  1,
-                                    "scrollAvg":  100,
+                                    "dwellAvg":  11,
+                                    "dwellMedian":  11,
+                                    "dwellSamples":  2,
+                                    "scrollAvg":  50,
                                     "backTotal":  8
                                 },
                  "2026-10-22":  {
