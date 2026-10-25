@@ -1,21 +1,25 @@
 ﻿{
-    "updated":  "2026-10-25 13:58",
+    "updated":  "2026-10-25 14:58",
     "days":  {
                  "2026-10-25":  {
-                                    "visitors":  1,
-                                    "newVisitors":  1,
-                                    "views":  2,
-                                    "sessions":  2,
+                                    "visitors":  2,
+                                    "newVisitors":  2,
+                                    "views":  3,
+                                    "sessions":  3,
                                     "clicks":  {
                                                    "dash":  1
                                                },
                                     "src":  {
-                                                "direct":  2
+                                                "direct":  3
                                             },
                                     "hours":  {
                                                   "13":  {
                                                              "clicks":  1,
                                                              "views":  2
+                                                         },
+                                                  "14":  {
+                                                             "clicks":  0,
+                                                             "views":  1
                                                          }
                                               },
                                     "dwellAvg":  46,
