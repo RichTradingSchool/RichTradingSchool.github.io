@@ -1,26 +1,26 @@
 ﻿{
-    "updated":  "2026-10-25 13:27",
+    "updated":  "2026-10-25 13:58",
     "days":  {
                  "2026-10-25":  {
                                     "visitors":  1,
                                     "newVisitors":  1,
-                                    "views":  1,
-                                    "sessions":  1,
+                                    "views":  2,
+                                    "sessions":  2,
                                     "clicks":  {
                                                    "dash":  1
                                                },
                                     "src":  {
-                                                "direct":  1
+                                                "direct":  2
                                             },
                                     "hours":  {
                                                   "13":  {
                                                              "clicks":  1,
-                                                             "views":  1
+                                                             "views":  2
                                                          }
                                               },
-                                    "dwellAvg":  83,
-                                    "dwellMedian":  83,
-                                    "dwellSamples":  1,
+                                    "dwellAvg":  46,
+                                    "dwellMedian":  46,
+                                    "dwellSamples":  2,
                                     "scrollAvg":  100,
                                     "backTotal":  2
                                 },
