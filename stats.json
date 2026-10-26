@@ -1,27 +1,31 @@
 ﻿{
-    "updated":  "2026-10-26 11:59",
+    "updated":  "2026-10-26 13:59",
     "days":  {
                  "2026-10-26":  {
-                                    "visitors":  1,
-                                    "newVisitors":  1,
-                                    "views":  1,
-                                    "sessions":  1,
+                                    "visitors":  2,
+                                    "newVisitors":  2,
+                                    "views":  2,
+                                    "sessions":  2,
                                     "clicks":  {
 
                                                },
                                     "src":  {
-                                                "direct":  1
+                                                "direct":  2
                                             },
                                     "hours":  {
                                                   "11":  {
                                                              "clicks":  0,
                                                              "views":  1
+                                                         },
+                                                  "13":  {
+                                                             "clicks":  0,
+                                                             "views":  1
                                                          }
                                               },
-                                    "dwellAvg":  6,
-                                    "dwellMedian":  6,
-                                    "dwellSamples":  1,
-                                    "scrollAvg":  100,
+                                    "dwellAvg":  8.5,
+                                    "dwellMedian":  8.5,
+                                    "dwellSamples":  2,
+                                    "scrollAvg":  50,
                                     "backTotal":  0
                                 },
                  "2026-10-25":  {
