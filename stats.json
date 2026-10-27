@@ -1,28 +1,33 @@
 ﻿{
-    "updated":  "2026-10-27 04:38",
+    "updated":  "2026-10-27 15:38",
     "days":  {
                  "2026-10-27":  {
-                                    "visitors":  1,
-                                    "newVisitors":  1,
-                                    "views":  1,
-                                    "sessions":  1,
+                                    "visitors":  3,
+                                    "newVisitors":  3,
+                                    "views":  3,
+                                    "sessions":  3,
                                     "clicks":  {
-
+                                                   "dash":  1,
+                                                   "tg":  1
                                                },
                                     "src":  {
-                                                "direct":  1
+                                                "direct":  3
                                             },
                                     "hours":  {
                                                   "04":  {
                                                              "clicks":  0,
                                                              "views":  1
+                                                         },
+                                                  "15":  {
+                                                             "clicks":  2,
+                                                             "views":  2
                                                          }
                                               },
-                                    "dwellAvg":  3,
-                                    "dwellMedian":  3,
-                                    "dwellSamples":  1,
+                                    "dwellAvg":  17.5,
+                                    "dwellMedian":  17.5,
+                                    "dwellSamples":  2,
                                     "scrollAvg":  100,
-                                    "backTotal":  0
+                                    "backTotal":  2
                                 },
                  "2026-10-26":  {
                                     "visitors":  3,
