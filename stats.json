@@ -1,5 +1,5 @@
 ﻿{
-    "updated":  "2026-10-28 23:16",
+    "updated":  "2026-10-28 23:46",
     "days":  {
                  "2026-10-28":  {
                                     "visitors":  3,
@@ -7,7 +7,7 @@
                                     "views":  3,
                                     "sessions":  3,
                                     "clicks":  {
-
+                                                   "tg":  1
                                                },
                                     "src":  {
                                                 "direct":  3
@@ -22,15 +22,15 @@
                                                              "views":  1
                                                          },
                                                   "23":  {
-                                                             "clicks":  0,
+                                                             "clicks":  1,
                                                              "views":  1
                                                          }
                                               },
-                                    "dwellAvg":  9,
-                                    "dwellMedian":  9,
-                                    "dwellSamples":  2,
-                                    "scrollAvg":  50,
-                                    "backTotal":  0
+                                    "dwellAvg":  11,
+                                    "dwellMedian":  14,
+                                    "dwellSamples":  3,
+                                    "scrollAvg":  66.7,
+                                    "backTotal":  1
                                 },
                  "2026-10-27":  {
                                     "visitors":  3,
