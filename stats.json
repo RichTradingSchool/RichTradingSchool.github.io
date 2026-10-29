@@ -1,16 +1,16 @@
 ﻿{
-    "updated":  "2026-10-29 13:17",
+    "updated":  "2026-10-29 22:47",
     "days":  {
                  "2026-10-29":  {
-                                    "visitors":  3,
-                                    "newVisitors":  3,
-                                    "views":  3,
-                                    "sessions":  3,
+                                    "visitors":  4,
+                                    "newVisitors":  4,
+                                    "views":  4,
+                                    "sessions":  4,
                                     "clicks":  {
 
                                                },
                                     "src":  {
-                                                "direct":  3
+                                                "direct":  4
                                             },
                                     "hours":  {
                                                   "04":  {
@@ -24,12 +24,16 @@
                                                   "12":  {
                                                              "clicks":  0,
                                                              "views":  1
+                                                         },
+                                                  "22":  {
+                                                             "clicks":  0,
+                                                             "views":  1
                                                          }
                                               },
-                                    "dwellAvg":  11.5,
-                                    "dwellMedian":  11.5,
-                                    "dwellSamples":  2,
-                                    "scrollAvg":  50,
+                                    "dwellAvg":  9,
+                                    "dwellMedian":  6,
+                                    "dwellSamples":  3,
+                                    "scrollAvg":  66.7,
                                     "backTotal":  0
                                 },
                  "2026-10-28":  {
