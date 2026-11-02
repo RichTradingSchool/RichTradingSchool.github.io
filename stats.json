@@ -1,6 +1,29 @@
 ﻿{
-    "updated":  "2026-11-02 23:22",
+    "updated":  "2026-11-03 00:52",
     "days":  {
+                 "2026-11-03":  {
+                                    "visitors":  0,
+                                    "newVisitors":  0,
+                                    "views":  0,
+                                    "sessions":  0,
+                                    "clicks":  {
+
+                                               },
+                                    "src":  {
+
+                                            },
+                                    "hours":  {
+                                                  "00":  {
+                                                             "views":  0,
+                                                             "clicks":  0
+                                                         }
+                                              },
+                                    "dwellAvg":  15,
+                                    "dwellMedian":  15,
+                                    "dwellSamples":  1,
+                                    "scrollAvg":  100,
+                                    "backTotal":  2
+                                },
                  "2026-11-02":  {
                                     "visitors":  2,
                                     "newVisitors":  1,
