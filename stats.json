@@ -1,17 +1,17 @@
 ﻿{
-    "updated":  "2026-11-03 13:53",
+    "updated":  "2026-11-03 16:23",
     "days":  {
                  "2026-11-03":  {
-                                    "visitors":  1,
-                                    "newVisitors":  1,
-                                    "views":  1,
-                                    "sessions":  1,
+                                    "visitors":  2,
+                                    "newVisitors":  2,
+                                    "views":  2,
+                                    "sessions":  2,
                                     "clicks":  {
                                                    "dash":  1,
                                                    "tg":  1
                                                },
                                     "src":  {
-                                                "direct":  1
+                                                "direct":  2
                                             },
                                     "hours":  {
                                                   "00":  {
@@ -20,6 +20,10 @@
                                                          },
                                                   "13":  {
                                                              "clicks":  2,
+                                                             "views":  1
+                                                         },
+                                                  "15":  {
+                                                             "clicks":  0,
                                                              "views":  1
                                                          }
                                               },
