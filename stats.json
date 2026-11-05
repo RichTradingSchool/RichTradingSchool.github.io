@@ -1,26 +1,30 @@
 ﻿{
-    "updated":  "2026-11-05 00:56",
+    "updated":  "2026-11-05 10:26",
     "days":  {
                  "2026-11-05":  {
-                                    "visitors":  1,
-                                    "newVisitors":  1,
-                                    "views":  1,
-                                    "sessions":  1,
+                                    "visitors":  2,
+                                    "newVisitors":  2,
+                                    "views":  2,
+                                    "sessions":  2,
                                     "clicks":  {
                                                    "tg":  1
                                                },
                                     "src":  {
-                                                "direct":  1
+                                                "direct":  2
                                             },
                                     "hours":  {
                                                   "00":  {
                                                              "clicks":  1,
                                                              "views":  1
+                                                         },
+                                                  "10":  {
+                                                             "clicks":  0,
+                                                             "views":  1
                                                          }
                                               },
-                                    "dwellAvg":  17,
-                                    "dwellMedian":  17,
-                                    "dwellSamples":  1,
+                                    "dwellAvg":  12,
+                                    "dwellMedian":  12,
+                                    "dwellSamples":  2,
                                     "scrollAvg":  100,
                                     "backTotal":  3
                                 },
