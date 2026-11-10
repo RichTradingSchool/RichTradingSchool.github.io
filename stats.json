@@ -1,29 +1,29 @@
 ﻿{
-    "updated":  "2026-11-11 01:39",
+    "updated":  "2026-11-11 02:09",
     "days":  {
                  "2026-11-11":  {
-                                    "visitors":  1,
-                                    "newVisitors":  1,
-                                    "views":  1,
-                                    "sessions":  1,
+                                    "visitors":  2,
+                                    "newVisitors":  2,
+                                    "views":  2,
+                                    "sessions":  2,
                                     "clicks":  {
                                                    "dash":  1,
                                                    "tg":  2
                                                },
                                     "src":  {
-                                                "direct":  1
+                                                "direct":  2
                                             },
                                     "hours":  {
                                                   "01":  {
                                                              "clicks":  3,
-                                                             "views":  1
+                                                             "views":  2
                                                          }
                                               },
-                                    "dwellAvg":  62,
-                                    "dwellMedian":  62,
-                                    "dwellSamples":  1,
+                                    "dwellAvg":  34,
+                                    "dwellMedian":  34,
+                                    "dwellSamples":  2,
                                     "scrollAvg":  100,
-                                    "backTotal":  5
+                                    "backTotal":  6
                                 },
                  "2026-11-10":  {
                                     "visitors":  1,
