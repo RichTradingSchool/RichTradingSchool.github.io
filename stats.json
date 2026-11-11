@@ -1,17 +1,17 @@
 ﻿{
-    "updated":  "2026-11-11 11:39",
+    "updated":  "2026-11-11 23:41",
     "days":  {
                  "2026-11-11":  {
-                                    "visitors":  5,
-                                    "newVisitors":  5,
-                                    "views":  5,
-                                    "sessions":  5,
+                                    "visitors":  6,
+                                    "newVisitors":  6,
+                                    "views":  6,
+                                    "sessions":  6,
                                     "clicks":  {
-                                                   "dash":  1,
-                                                   "tg":  2
+                                                   "tg":  2,
+                                                   "dash":  2
                                                },
                                     "src":  {
-                                                "direct":  5
+                                                "direct":  6
                                             },
                                     "hours":  {
                                                   "01":  {
@@ -29,12 +29,16 @@
                                                   "11":  {
                                                              "clicks":  0,
                                                              "views":  1
+                                                         },
+                                                  "23":  {
+                                                             "clicks":  1,
+                                                             "views":  1
                                                          }
                                               },
-                                    "dwellAvg":  197,
-                                    "dwellMedian":  34,
-                                    "dwellSamples":  4,
-                                    "scrollAvg":  50,
+                                    "dwellAvg":  159,
+                                    "dwellMedian":  7,
+                                    "dwellSamples":  5,
+                                    "scrollAvg":  60,
                                     "backTotal":  6
                                 },
                  "2026-11-10":  {
