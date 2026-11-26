@@ -1,5 +1,5 @@
 ﻿{
-    "updated":  "2026-11-26 18:23",
+    "updated":  "2026-11-26 23:23",
     "days":  {
                  "2026-11-26":  {
                                     "visitors":  3,
@@ -37,13 +37,17 @@
                                                   "17":  {
                                                              "views":  0,
                                                              "clicks":  0
+                                                         },
+                                                  "23":  {
+                                                             "views":  0,
+                                                             "clicks":  0
                                                          }
                                               },
-                                    "dwellAvg":  167.3,
-                                    "dwellMedian":  13,
+                                    "dwellAvg":  167.7,
+                                    "dwellMedian":  14,
                                     "dwellSamples":  3,
                                     "scrollAvg":  82.3,
-                                    "backTotal":  15
+                                    "backTotal":  16
                                 },
                  "2026-11-25":  {
                                     "visitors":  2,
